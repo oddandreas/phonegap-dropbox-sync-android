@@ -37,19 +37,19 @@ import com.dropbox.sync.android.DbxSyncStatus;
  * PhoneGap Dropbox Sync Plugin for Android - Ross Martin 8/21/13.
  */
 public class DropboxPlugin extends CordovaPlugin {
-	
-	private static final String TAG = "DropboxPlugin";
+    
+    private static final String TAG = "DropboxPlugin";
     private static final String APP_KEY = "81v5tm7jg21zk8c"; // Your app key here
-	private static final String APP_SECRET = "f9cwicck72tuhpx"; // Your app secret here
-	static final int REQUEST_LINK_TO_DBX = 1337;  // This value is up to you, it must be the same as in your main activity though
-	private DbxAccountManager mDbxAcctMgr;
-	private static List<File> localFileList;
-	private static int numFilesToUpload;
-	
+    private static final String APP_SECRET = "f9cwicck72tuhpx"; // Your app secret here
+    static final int REQUEST_LINK_TO_DBX = 1337;  // This value is up to you, it must be the same as in your main activity though
+    private DbxAccountManager mDbxAcctMgr;
+    private static List<File> localFileList;
+    private static int numFilesToUpload;
+    
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
-    	mDbxAcctMgr = DbxAccountManager.getInstance(cordova.getActivity().getApplicationContext(), APP_KEY, APP_SECRET);
-    	
+        mDbxAcctMgr = DbxAccountManager.getInstance(cordova.getActivity().getApplicationContext(), APP_KEY, APP_SECRET);
+        
         if (action.equals("checkLink")) {
             String message = args.getString(0);
             this.checkLink(message, callbackContext);
@@ -57,342 +57,342 @@ public class DropboxPlugin extends CordovaPlugin {
         } else if (action.equals("link")) {
             String message = args.getString(0);
             this.link(message, callbackContext);
-        	return true;
+            return true;
         } else if (action.equals("unlink")) {
             String message = args.getString(0);
             this.unlink(message, callbackContext);
-        	return true;
+            return true;
         } else if (action.equals("listFolder")) {
             String message = args.getString(0);
             this.listFolder(message, callbackContext);
-        	return true;
+            return true;
         } else if (action.equals("addObserver")) {
             String message = args.getString(0);
             this.addObserver(message, callbackContext);
-        	return true;
+            return true;
         } else if (action.equals("readData")) {
             String message = args.getString(0);
             this.readData(message, callbackContext);
-        	return true;
+            return true;
         } else if (action.equals("readString")) {
             String message = args.getString(0);
             this.readString(message, callbackContext);
-        	return true;
+            return true;
         } else if (action.equals("uploadFile")) {
             String message = args.getString(0);
             this.uploadFile(message, callbackContext);
-        	return true;
+            return true;
         } else if (action.equals("uploadFolder")) {
             String message = args.getString(0);
             this.uploadFolder(message, callbackContext);
-        	return true;
+            return true;
         }
         return false;
     }
     
     private void checkLink(String message, CallbackContext callbackContext) {
-    	Log.v(TAG, "checkLink method executing");
-    	if (mDbxAcctMgr.hasLinkedAccount()){
-    		callbackContext.success();
-    	} else {
-    		callbackContext.error("User not authenticated yet");
-    	}
+        Log.v(TAG, "checkLink method executing");
+        if (mDbxAcctMgr.hasLinkedAccount()){
+            callbackContext.success();
+        } else {
+            callbackContext.error("User not authenticated yet");
+        }
     }
 
     private void link(String message, CallbackContext callbackContext) {
-    	Log.v(TAG, "link method executing");
-    	mDbxAcctMgr.startLink(cordova.getActivity(), REQUEST_LINK_TO_DBX);
+        Log.v(TAG, "link method executing");
+        mDbxAcctMgr.startLink(cordova.getActivity(), REQUEST_LINK_TO_DBX);
     }
     
     private void unlink(String message, CallbackContext callbackContext) {
-    	Log.v(TAG, "unlink method executing");
-    	mDbxAcctMgr.unlink();
-    	callbackContext.success();
+        Log.v(TAG, "unlink method executing");
+        mDbxAcctMgr.unlink();
+        callbackContext.success();
     }
     
-	private void listFolder(final String message, final CallbackContext callbackContext) {
-		Log.v(TAG, "listFolder method executing");
-		cordova.getThreadPool().execute(new Runnable() {
-		    public void run() {
-		    	DbxFileSystem dbxFs;
-				JSONArray jsonArray = new JSONArray();
-				try {
-					dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
-					List<DbxFileInfo> infos = dbxFs.listFolder(new DbxPath(message));
-				    for (DbxFileInfo info : infos) {
-				    	JSONObject dbFile = new JSONObject();
-				    	dbFile.put("path", info.path);
-				    	dbFile.put("modifiedTime", info.modifiedTime);
-				    	dbFile.put("size", info.size);
-				    	dbFile.put("isFolder", info.isFolder);
-				    	jsonArray.put(dbFile);
-		            } // end of for loop
-				    callbackContext.success(jsonArray);
-				} catch (Unauthorized e) {
-					e.printStackTrace();
-					callbackContext.error("DropboxPlugin Error");
-				} catch (DbxException e) {
-					e.printStackTrace();
-					callbackContext.error("DropboxPlugin Error");
-				} catch (JSONException e) {
-					e.printStackTrace();
-					callbackContext.error("DropboxPlugin Error");
-				}
-		    }
-		});
-		
+    private void listFolder(final String message, final CallbackContext callbackContext) {
+        Log.v(TAG, "listFolder method executing");
+        cordova.getThreadPool().execute(new Runnable() {
+            public void run() {
+                DbxFileSystem dbxFs;
+                JSONArray jsonArray = new JSONArray();
+                try {
+                    dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
+                    List<DbxFileInfo> infos = dbxFs.listFolder(new DbxPath(message));
+                    for (DbxFileInfo info : infos) {
+                        JSONObject dbFile = new JSONObject();
+                        dbFile.put("path", info.path);
+                        dbFile.put("modifiedTime", info.modifiedTime);
+                        dbFile.put("size", info.size);
+                        dbFile.put("isFolder", info.isFolder);
+                        jsonArray.put(dbFile);
+                    }
+                    callbackContext.success(jsonArray);
+                } catch (Unauthorized e) {
+                    e.printStackTrace();
+                    callbackContext.error("DropboxPlugin Error");
+                } catch (DbxException e) {
+                    e.printStackTrace();
+                    callbackContext.error("DropboxPlugin Error");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    callbackContext.error("DropboxPlugin Error");
+                }
+            }
+        });
+        
     }
-	
+    
     private void addObserver(final String message, final CallbackContext callbackContext) {
-    	Log.v(TAG, "addObserver method executing");
-    	cordova.getThreadPool().execute(new Runnable() {
-    	    public void run() {
-    	    	DbxFileSystem dbxFs;
-    	    	try {
-    				dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
-    				dbxFs.addPathListener(new DbxFileSystem.PathListener() {
+        Log.v(TAG, "addObserver method executing");
+        cordova.getThreadPool().execute(new Runnable() {
+            public void run() {
+                DbxFileSystem dbxFs;
+                try {
+                    dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
+                    dbxFs.addPathListener(new DbxFileSystem.PathListener() {
 
-    					@Override
-    					public void onPathChange(DbxFileSystem arg0, DbxPath arg1, Mode arg2) {
-    						webView.loadUrl("javascript:dropbox_fileChange();");
-    					}
-    					
-    				}, new DbxPath(message), Mode.PATH_OR_CHILD);
-    				
-    				dbxFs.addSyncStatusListener(new DbxFileSystem.SyncStatusListener() {
-						
-						@Override
-						public void onSyncStatusChange(DbxFileSystem fs) {
-							try {
-								DbxSyncStatus dbSyncStatus = fs.getSyncStatus();
-								if (! dbSyncStatus.anyInProgress()) {
-									webView.loadUrl("javascript:dropbox_onSyncStatusChange('none');");
-								} else {
-									webView.loadUrl("javascript:dropbox_onSyncStatusChange('sync');");
-								}
-							} catch (DbxException e) {
-								e.printStackTrace();
-							}
-						}
-					});
-    			} catch (Unauthorized e) {
-    				e.printStackTrace();
-    				callbackContext.error("DropboxPlugin Error");
-    			}
-    	    }
-    	});
+                        @Override
+                        public void onPathChange(DbxFileSystem arg0, DbxPath arg1, Mode arg2) {
+                            webView.loadUrl("javascript:dropbox_fileChange();");
+                        }
+                        
+                    }, new DbxPath(message), Mode.PATH_OR_CHILD);
+                    
+                    dbxFs.addSyncStatusListener(new DbxFileSystem.SyncStatusListener() {
+                        
+                        @Override
+                        public void onSyncStatusChange(DbxFileSystem fs) {
+                            try {
+                                DbxSyncStatus dbSyncStatus = fs.getSyncStatus();
+                                if (! dbSyncStatus.anyInProgress()) {
+                                    webView.loadUrl("javascript:dropbox_onSyncStatusChange('none');");
+                                } else {
+                                    webView.loadUrl("javascript:dropbox_onSyncStatusChange('sync');");
+                                }
+                            } catch (DbxException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                } catch (Unauthorized e) {
+                    e.printStackTrace();
+                    callbackContext.error("DropboxPlugin Error");
+                }
+            }
+        });
     }
     
     private void readData(final String message, final CallbackContext callbackContext) {
-    	Log.v(TAG, "readData method executing");
-    	cordova.getThreadPool().execute(new Runnable() {
-    	    public void run() {
-    	    	DbxFileSystem dbxFs;
-    	    	
-    	    	try {
-    				dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
-    				DbxPath filePath = new DbxPath(message);
-    				DbxFile file = dbxFs.open(filePath);
-    		    	try {
-    		    	    FileInputStream contents = file.getReadStream();
-    		    	    BufferedInputStream buf = new BufferedInputStream(contents);
-    		    	    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    		            // read until a single byte is available
-    		            while(buf.available() > 0) {
-    		               // read the byte and convert the integer to character
-    		               char c = (char)buf.read();
-    		               baos.write(c);
-    		            }
-    		    	    callbackContext.success(baos.toByteArray());
-    		    	    baos.flush();
-    		    	    buf.close();
-    		    	} catch (IOException e) {
-    					e.printStackTrace();
-    					callbackContext.error("DropboxPlugin Error");
-    				} finally {
-    		    		file.close();
-    		    	}
-    				
-    			} catch (Unauthorized e) {
-    				e.printStackTrace();
-    				callbackContext.error("DropboxPlugin Error");
-    			} catch (DbxException e) {
-    				e.printStackTrace();
-    				callbackContext.error("DropboxPlugin Error");
-    			} 
-    	    }
-    	});
-    	
-    	
+        Log.v(TAG, "readData method executing");
+        cordova.getThreadPool().execute(new Runnable() {
+            public void run() {
+                DbxFileSystem dbxFs;
+                
+                try {
+                    dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
+                    DbxPath filePath = new DbxPath(message);
+                    DbxFile file = dbxFs.open(filePath);
+                    try {
+                        FileInputStream contents = file.getReadStream();
+                        BufferedInputStream buf = new BufferedInputStream(contents);
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        // read until a single byte is available
+                        while(buf.available() > 0) {
+                           // read the byte and convert the integer to character
+                           char c = (char)buf.read();
+                           baos.write(c);
+                        }
+                        callbackContext.success(baos.toByteArray());
+                        baos.flush();
+                        buf.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        callbackContext.error("DropboxPlugin Error");
+                    } finally {
+                        file.close();
+                    }
+                    
+                } catch (Unauthorized e) {
+                    e.printStackTrace();
+                    callbackContext.error("DropboxPlugin Error");
+                } catch (DbxException e) {
+                    e.printStackTrace();
+                    callbackContext.error("DropboxPlugin Error");
+                } 
+            }
+        });
+        
+        
     }
     
     private void readString(final String message, final CallbackContext callbackContext) {
-    	Log.v(TAG, "readString method executing");
-    	cordova.getThreadPool().execute(new Runnable() {
-    	    public void run() {
-    	    	DbxFileSystem dbxFs;
-    	    	
-    	    	try {
-    				dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
-    		    	DbxPath filePath = new DbxPath(message);
-    		    	DbxFile file = dbxFs.open(filePath);
-    		    	try {
-    		    	    String contents = file.readString();
-    		    	    callbackContext.success(contents);
-    		    	} catch (IOException e) {
-    					e.printStackTrace();
-    					callbackContext.error("DropboxPlugin Error");
-    				} finally {
-    		    		file.close();
-    		    	}
-    			} catch (Unauthorized e) {
-    				e.printStackTrace();
-    				callbackContext.error("DropboxPlugin Error");
-    			} catch (DbxException e) {
-    				e.printStackTrace();
-    				callbackContext.error("DropboxPlugin Error");
-    			}
-    	    }
-    	});
+        Log.v(TAG, "readString method executing");
+        cordova.getThreadPool().execute(new Runnable() {
+            public void run() {
+                DbxFileSystem dbxFs;
+                
+                try {
+                    dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
+                    DbxPath filePath = new DbxPath(message);
+                    DbxFile file = dbxFs.open(filePath);
+                    try {
+                        String contents = file.readString();
+                        callbackContext.success(contents);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        callbackContext.error("DropboxPlugin Error");
+                    } finally {
+                        file.close();
+                    }
+                } catch (Unauthorized e) {
+                    e.printStackTrace();
+                    callbackContext.error("DropboxPlugin Error");
+                } catch (DbxException e) {
+                    e.printStackTrace();
+                    callbackContext.error("DropboxPlugin Error");
+                }
+            }
+        });
     }
     
     private void uploadFile(final String message, final CallbackContext callbackContext) {
-    	Log.v(TAG, "uploadFile method executing");
-    	cordova.getThreadPool().execute(new Runnable() {
-    	    public void run() {
-    	    	DbxFileSystem dbxFs;
-    	    	
-    	    	try {
-    				dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
-    				File uploadFile = resolveLocalFileSystemURI(message);
-    				DbxPath filePath = new DbxPath(DbxPath.ROOT, uploadFile.getName());
-    				DbxFile dbxFile;
-    				if (dbxFs.exists(filePath)){
-    					dbxFile = dbxFs.open(filePath);
-    				} else {
-    					dbxFile = dbxFs.create(filePath);
-    				}
-    		    	dbxFile.writeFromExistingFile(uploadFile, false);
-    		    	dbxFs.syncNowAndWait();
-    		    	dbxFile.addListener(new DbxFile.Listener() {
-						@Override
-						public void onFileChange(DbxFile file) {
-							Log.v(TAG, "onFileChange is firing");
-							DbxFileStatus status;
-							try {
-								status = file.getSyncStatus();
-								long sizeTransferred = status.bytesTransferred;
-								Log.v(TAG, "upload, sizeTransferred -> " + sizeTransferred);
-								if (sizeTransferred == -1) { // transfer done
-									file.close();
-									callbackContext.success();
-								}
-							} catch (DbxException e) {
-								e.printStackTrace();
-							}
-						}
-					});
-    			} catch (Unauthorized e) {
-    				e.printStackTrace();
-    				callbackContext.error("DropboxPlugin Error");
-    			} catch (DbxException e) {
-    				e.printStackTrace();
-    				callbackContext.error("DropboxPlugin Error");
-    			} catch (IOException e) {
-					e.printStackTrace();
-					callbackContext.error("DropboxPlugin Error");
-				} catch (JSONException e) {
-					callbackContext.error("DropboxPlugin Error");
-				}
-    	    }
-    	});
+        Log.v(TAG, "uploadFile method executing");
+        cordova.getThreadPool().execute(new Runnable() {
+            public void run() {
+                DbxFileSystem dbxFs;
+                
+                try {
+                    dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
+                    File uploadFile = resolveLocalFileSystemURI(message);
+                    DbxPath filePath = new DbxPath(DbxPath.ROOT, uploadFile.getName());
+                    DbxFile dbxFile;
+                    if (dbxFs.exists(filePath)){
+                        dbxFile = dbxFs.open(filePath);
+                    } else {
+                        dbxFile = dbxFs.create(filePath);
+                    }
+                    dbxFile.writeFromExistingFile(uploadFile, false);
+                    dbxFs.syncNowAndWait();
+                    dbxFile.addListener(new DbxFile.Listener() {
+                        @Override
+                        public void onFileChange(DbxFile file) {
+                            Log.v(TAG, "onFileChange is firing");
+                            DbxFileStatus status;
+                            try {
+                                status = file.getSyncStatus();
+                                long sizeTransferred = status.bytesTransferred;
+                                Log.v(TAG, "upload, sizeTransferred -> " + sizeTransferred);
+                                if (sizeTransferred == -1) { // transfer done
+                                    file.close();
+                                    callbackContext.success();
+                                }
+                            } catch (DbxException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                } catch (Unauthorized e) {
+                    e.printStackTrace();
+                    callbackContext.error("DropboxPlugin Error");
+                } catch (DbxException e) {
+                    e.printStackTrace();
+                    callbackContext.error("DropboxPlugin Error");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    callbackContext.error("DropboxPlugin Error");
+                } catch (JSONException e) {
+                    callbackContext.error("DropboxPlugin Error");
+                }
+            }
+        });
     }
     
     private void uploadFolder(final String message, final CallbackContext callbackContext) {
-    	Log.v(TAG, "uploadFolder method executing");
-    	cordova.getThreadPool().execute(new Runnable() {
-    	    public void run() {
-    	    	DbxFileSystem dbxFs;
-    	    	
-    	    	try {
-    				dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
-        	    	File uploadPath = resolveLocalFileSystemURI(message);
-        	    	localFileList = new ArrayList<File>();
-        	    	recursiveDirectorySearch(uploadPath);
-        	    	Log.v(TAG, "uploadFolder after recursiveDirectorySearch method call, localFileList -> " + localFileList);
-        	    	numFilesToUpload = localFileList.size();
-        	    	if (numFilesToUpload > 0) {
-	        	    	for (File file : localFileList) {
-	        				DbxFile dbxFile;
-	        				String parentName = uploadPath.getName();
-	        				int needle = file.getPath().indexOf(parentName);
-	        				String fileUploadName = file.getPath().substring(needle);
-	        				Log.v(TAG, "fileUploadName -> " + fileUploadName);
-	        				
-	        				if (file.isDirectory()) {
-	        					DbxPath filePath = new DbxPath(DbxPath.ROOT, fileUploadName);
-	        					if (!dbxFs.exists(filePath)) {
-	        						Log.v(TAG, "Creating new directory in Dropbox, directory name -> " + fileUploadName);
-		        					dbxFs.createFolder(filePath);
-		        				}
-								numFilesToUpload--;
-								if (numFilesToUpload == 0) {
-									callbackContext.success();
-								}
-	        				} else {
-	        					DbxPath filePath = new DbxPath(DbxPath.ROOT, fileUploadName);
-		        				if (dbxFs.exists(filePath)) {
-		        					dbxFile = dbxFs.open(filePath);
-		        				} else {
-		        					dbxFile = dbxFs.create(filePath);
-		        				}
-		        		    	dbxFile.writeFromExistingFile(file, false);
-		        		    	dbxFs.syncNowAndWait();
-		        		    	dbxFile.addListener(new DbxFile.Listener() {
-		    						@Override
-		    						public void onFileChange(DbxFile file) {
-		    							DbxFileStatus status;
-		    							try {
-		    								status = file.getSyncStatus();
-		    								long sizeTransferred = status.bytesTransferred;
-		    								if (sizeTransferred == -1) { // transfer done
-		    									file.close();
-		    									numFilesToUpload--;
-		    									if (numFilesToUpload == 0) {
-		    										callbackContext.success();
-		    									}
-		    								}
-		    							} catch (DbxException e) {
-		    								e.printStackTrace();
-		    							}
-		    						}
-		    					});
-		        			}
-	        	    	}
-        	    	} else { // just an empty directory to make
-        				if (uploadPath.isDirectory()) {
-        					DbxPath filePath = new DbxPath(DbxPath.ROOT, uploadPath.getName());
-        					if (!dbxFs.exists(filePath)) {
-        						Log.v(TAG, "Creating new directory in Dropbox, directory name -> " + uploadPath.getName());
-	        					dbxFs.createFolder(filePath);
-	        					callbackContext.success();
-	        				}
-        				} 
-        	    	}
-    			} catch (Unauthorized e) {
-    				e.printStackTrace();
-    				callbackContext.error("DropboxPlugin Error");
-    			} catch (DbxException e) {
-    				e.printStackTrace();
-    				callbackContext.error("DropboxPlugin Error");
-    			} catch (IOException e) {
-					e.printStackTrace();
-					callbackContext.error("DropboxPlugin Error");
-				} catch (JSONException e) {
-					callbackContext.error("DropboxPlugin Error");
-				}
-    	    }
-    	});
+        Log.v(TAG, "uploadFolder method executing");
+        cordova.getThreadPool().execute(new Runnable() {
+            public void run() {
+                DbxFileSystem dbxFs;
+                
+                try {
+                    dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
+                    File uploadPath = resolveLocalFileSystemURI(message);
+                    localFileList = new ArrayList<File>();
+                    recursiveDirectorySearch(uploadPath);
+                    Log.v(TAG, "uploadFolder after recursiveDirectorySearch method call, localFileList -> " + localFileList);
+                    numFilesToUpload = localFileList.size();
+                    if (numFilesToUpload > 0) {
+                        for (File file : localFileList) {
+                            DbxFile dbxFile;
+                            String parentName = uploadPath.getName();
+                            int needle = file.getPath().indexOf(parentName);
+                            String fileUploadName = file.getPath().substring(needle);
+                            Log.v(TAG, "fileUploadName -> " + fileUploadName);
+                            
+                            if (file.isDirectory()) {
+                                DbxPath filePath = new DbxPath(DbxPath.ROOT, fileUploadName);
+                                if (!dbxFs.exists(filePath)) {
+                                    Log.v(TAG, "Creating new directory in Dropbox, directory name -> " + fileUploadName);
+                                    dbxFs.createFolder(filePath);
+                                }
+                                numFilesToUpload--;
+                                if (numFilesToUpload == 0) {
+                                    callbackContext.success();
+                                }
+                            } else {
+                                DbxPath filePath = new DbxPath(DbxPath.ROOT, fileUploadName);
+                                if (dbxFs.exists(filePath)) {
+                                    dbxFile = dbxFs.open(filePath);
+                                } else {
+                                    dbxFile = dbxFs.create(filePath);
+                                }
+                                dbxFile.writeFromExistingFile(file, false);
+                                dbxFs.syncNowAndWait();
+                                dbxFile.addListener(new DbxFile.Listener() {
+                                    @Override
+                                    public void onFileChange(DbxFile file) {
+                                        DbxFileStatus status;
+                                        try {
+                                            status = file.getSyncStatus();
+                                            long sizeTransferred = status.bytesTransferred;
+                                            if (sizeTransferred == -1) { // transfer done
+                                                file.close();
+                                                numFilesToUpload--;
+                                                if (numFilesToUpload == 0) {
+                                                    callbackContext.success();
+                                                }
+                                            }
+                                        } catch (DbxException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    } else { // just an empty directory to make
+                        if (uploadPath.isDirectory()) {
+                            DbxPath filePath = new DbxPath(DbxPath.ROOT, uploadPath.getName());
+                            if (!dbxFs.exists(filePath)) {
+                                Log.v(TAG, "Creating new directory in Dropbox, directory name -> " + uploadPath.getName());
+                                dbxFs.createFolder(filePath);
+                                callbackContext.success();
+                            }
+                        } 
+                    }
+                } catch (Unauthorized e) {
+                    e.printStackTrace();
+                    callbackContext.error("DropboxPlugin Error");
+                } catch (DbxException e) {
+                    e.printStackTrace();
+                    callbackContext.error("DropboxPlugin Error");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    callbackContext.error("DropboxPlugin Error");
+                } catch (JSONException e) {
+                    callbackContext.error("DropboxPlugin Error");
+                }
+            }
+        });
     }
     
     @SuppressWarnings("deprecation")
@@ -435,21 +435,21 @@ public class DropboxPlugin extends CordovaPlugin {
     }
     
     private static void recursiveDirectorySearch(File dir) {
-		try {
-			File[] files = dir.listFiles();
-			for (File file : files) {
-				if (file.isDirectory()) {
-					Log.v(TAG, "directory:" + file.getCanonicalPath());
-					localFileList.add(file);
-					recursiveDirectorySearch(file);
-				} else {
-					Log.v(TAG, "file:" + file.getCanonicalPath());
-					localFileList.add(file);
-				}
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+        try {
+            File[] files = dir.listFiles();
+            for (File file : files) {
+                if (file.isDirectory()) {
+                    Log.v(TAG, "directory:" + file.getCanonicalPath());
+                    localFileList.add(file);
+                    recursiveDirectorySearch(file);
+                } else {
+                    Log.v(TAG, "file:" + file.getCanonicalPath());
+                    localFileList.add(file);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
    
 }
