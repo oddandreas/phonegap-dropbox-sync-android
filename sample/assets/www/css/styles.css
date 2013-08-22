@@ -81,7 +81,7 @@ a {
 }
 
 #localFileList, #localFileList li, #localFileList li a {
-	width: 100% !important;
+    width: 100% !important;
 }
 
 .topcoat-list__container,
@@ -95,19 +95,19 @@ ul {
 }
 
 #loader {
-	display:none; 
-	position:absolute; 
-	z-index:1; 
-	top:15px; 
-	left: 70px;
+    display:none; 
+    position:absolute; 
+    z-index:1; 
+    top:15px; 
+    left: 70px;
 }
 
 #theTopcoatNavBar {
-	position:fixed; 
-	top 0px; 
-	width:100%;
+    position:fixed; 
+    top 0px; 
+    width:100%;
 }
 
 #containerBelowNavBar {
-	padding-top:64px;
+    padding-top:64px;
 }
