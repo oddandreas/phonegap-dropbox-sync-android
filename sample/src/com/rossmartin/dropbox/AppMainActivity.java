@@ -54,4 +54,3 @@ public class AppMainActivity extends DroidGap
 	    }
 	}
 }
-
