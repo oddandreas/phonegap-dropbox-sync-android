@@ -53,6 +53,5 @@ public class AppMainActivity extends DroidGap
 	        super.onActivityResult(requestCode, resultCode, data);
 	    }
 	}
-	
 }
 
