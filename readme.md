@@ -28,20 +28,20 @@ dropbox.listFolder("/").done(function (files) {
 
 Upload a file to Dropbox:
 ```
-dropbox.uploadFolder("file:///storage/sdcard0/DCIM/Camera/avideofile.mp4").done(function () {
-    // call to uploadFolder successful
+dropbox.uploadFile("file:///storage/sdcard0/DCIM/Camera/avideofile.mp4").done(function () {
+    // call to uploadFile successful
     // you pass a local URI to this method
 }).fail(function() {
-    // call to uploadFolder method failed
+    // call to uploadFile method failed
 });
 ```
 
 Upload a folder to Dropbox (grabs all subfolders & files):
 ```
-dropbox.uploadFile("file:///storage/sdcard0").done(function () {
-    // call to uploadFile successful
+dropbox.uploadFolder("file:///storage/sdcard0").done(function () {
+    // call to uploadFolder successful
     // you pass a local URI to this method
 }).fail(function() {
-    // call to uploadFile method failed
+    // call to uploadFolder method failed
 });
 ```
