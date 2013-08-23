@@ -2,6 +2,7 @@
 
 A PhoneGap plugin for the [Dropbox Sync API](https://www.dropbox.com/developers/sync).
 
+Read my blog post [here](http://rossmartindev.blogspot.com/2013/08/phonegap-plugin-for-dropbox-sync-api.html)
 
 Usage:
 -----------
@@ -27,7 +28,7 @@ dropbox.listFolder("/").done(function (files) {
 
 Upload a file to Dropbox:
 ```
-dropbox.uploadFolder("file:///storage/sdcard0/DCIM").done(function () {
+dropbox.uploadFolder("file:///storage/sdcard0/DCIM/Camera/avideofile.mp4").done(function () {
     // call to uploadFolder successful
     // you pass a local URI to this method
 }).fail(function() {
