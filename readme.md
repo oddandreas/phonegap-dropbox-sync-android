@@ -27,11 +27,11 @@ dropbox.listFolder("/").done(function (files) {
 
 Upload a file to Dropbox:
 ```
-dropbox.uploadFile("file:///storage/sdcard0/DCIM").done(function () {
-    // call to uploadFile successful
+dropbox.uploadFolder("file:///storage/sdcard0/DCIM").done(function () {
+    // call to uploadFolder successful
     // you pass a local URI to this method
 }).fail(function() {
-    // call to uploadFile method failed
+    // call to uploadFolder method failed
 });
 ```
 
