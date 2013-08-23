@@ -277,11 +277,11 @@ var app = (function() {
     // ** local filesystem arithmetic
     function getFSRoot(fileSystem) { // not really root on first run, but you can get to root if you're rooted by clicking back
         window.resolveLocalFileSystemURI("file:///storage", function(dir) {
-           localFileFullPath = fileSystem.root.fullPath;
+           localFileFullPath = dir.fullPath;
            var directoryReader = dir.createReader();
            directoryReader.readEntries(readerSuccess,readerFail);
         }, function(err){
-           console.log('failed to get /storage directory, error ' + err.code + '\nfalling back to using fileSystem.root.fullPath ');
+           console.log('failed to get /storage directory, error ' + err.code + '\nfalling back to using fileSystem.root.fullPath');
            localFileFullPath = fileSystem.root.fullPath;
            var directoryReader = fileSystem.root.createReader();
            directoryReader.readEntries(readerSuccess,readerFail);
