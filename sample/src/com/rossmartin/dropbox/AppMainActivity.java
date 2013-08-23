@@ -11,7 +11,7 @@ public class AppMainActivity extends DroidGap
     private static final String TAG = "AppMainActivity";
     static final int REQUEST_LINK_TO_DBX = 1337;  // This value is up to you, must be the same as in your plugin though
 
-	@Override
+    @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
