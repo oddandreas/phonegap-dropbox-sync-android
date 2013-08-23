@@ -4,7 +4,7 @@ A PhoneGap plugin for the [Dropbox Sync API](https://www.dropbox.com/developers/
 
 Read my blog post [here](http://rossmartindev.blogspot.com/2013/08/phonegap-plugin-for-dropbox-sync-api.html)
 
-Usage:
+Sample Usage:
 -----------
 Link to Dropbox:
 
