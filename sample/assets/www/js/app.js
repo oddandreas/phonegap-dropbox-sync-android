@@ -69,7 +69,7 @@ var app = (function() {
        $('#fileUploadView').show();
        if (localFileFullPath == ''){
           // request the persistent file system
-          window.requestFileSystem(LocalFileSystem.PERSISTENT, 1, getFSRoot, FSfail);
+          window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, getFSRoot, FSfail);
        }
     }
     
