@@ -62,7 +62,6 @@ var dropbox = (function() {
         var deferred = $.Deferred();
         Cordova.exec(
             function(result) {
-                alert("addObserver result");
                 deferred.resolve(result);
             },
             function(error) {
