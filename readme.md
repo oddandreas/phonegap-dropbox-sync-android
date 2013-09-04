@@ -46,4 +46,4 @@ dropbox.uploadFolder("file:///storage/sdcard0").done(function () {
 });
 ```
 
-__Note: This plugin requires jQuery for the Deferred Object.__
+__Note: This plugin requires jQuery 1.5+ for the Deferred Object.__
