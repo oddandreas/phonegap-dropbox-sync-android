@@ -45,3 +45,5 @@ dropbox.uploadFolder("file:///storage/sdcard0").done(function () {
     // call to uploadFolder method failed
 });
 ```
+
+__Note: This plugin requires jQuery for the Deferred Object.__
