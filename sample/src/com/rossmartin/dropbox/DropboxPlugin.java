@@ -102,6 +102,7 @@ public class DropboxPlugin extends CordovaPlugin {
     private void link(String message, CallbackContext callbackContext) {
         Log.v(TAG, "link method executing");
         mDbxAcctMgr.startLink(cordova.getActivity(), REQUEST_LINK_TO_DBX);
+        callbackContext.success();
     }
     
     private void unlink(String message, CallbackContext callbackContext) {

@@ -80,7 +80,7 @@ var app = (function() {
     $('#image').css({'max-width':w, 'max-height':h});
 
     $("#btn-link").on("click", function() {
-        dropbox.link().done(showDropboxView);
+        dropbox.link();
         event.preventDefault();
     });
 
