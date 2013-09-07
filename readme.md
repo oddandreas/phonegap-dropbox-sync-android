@@ -9,11 +9,7 @@ Sample Usage:
 Link to Dropbox:
 
 ```
-dropbox.link.done(function() {
-    // call to link method successful
-}).fail(function() {
-    // call to link method failed
-});
+dropbox.link();
 ```
 
 List the Dropbox App's root folder:
