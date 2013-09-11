@@ -39,6 +39,7 @@ import com.dropbox.sync.android.DbxSyncStatus;
 public class DropboxPlugin extends CordovaPlugin {
     
     private static final String TAG = "DropboxPlugin";
+    private static final String PLUGIN_ERROR = "DropboxPlugin Error";
     private static final String APP_KEY = "81v5tm7jg21zk8c"; // Your app key here
     private static final String APP_SECRET = "f9cwicck72tuhpx"; // Your app secret here
     static final int REQUEST_LINK_TO_DBX = 1337;  // This value is up to you, it must be the same as in your main activity though
@@ -48,42 +49,34 @@ public class DropboxPlugin extends CordovaPlugin {
     
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
+        Log.v(TAG, "execute method starting");
         mDbxAcctMgr = DbxAccountManager.getInstance(cordova.getActivity().getApplicationContext(), APP_KEY, APP_SECRET);
-        
+        String message = args.getString(0);
         if (action.equals("checkLink")) {
-            String message = args.getString(0);
             this.checkLink(message, callbackContext);
             return true;
         } else if (action.equals("link")) {
-            String message = args.getString(0);
             this.link(message, callbackContext);
             return true;
         } else if (action.equals("unlink")) {
-            String message = args.getString(0);
             this.unlink(message, callbackContext);
             return true;
         } else if (action.equals("listFolder")) {
-            String message = args.getString(0);
             this.listFolder(message, callbackContext);
             return true;
         } else if (action.equals("addObserver")) {
-            String message = args.getString(0);
             this.addObserver(message, callbackContext);
             return true;
         } else if (action.equals("readData")) {
-            String message = args.getString(0);
             this.readData(message, callbackContext);
             return true;
         } else if (action.equals("readString")) {
-            String message = args.getString(0);
             this.readString(message, callbackContext);
             return true;
         } else if (action.equals("uploadFile")) {
-            String message = args.getString(0);
             this.uploadFile(message, callbackContext);
             return true;
         } else if (action.equals("uploadFolder")) {
-            String message = args.getString(0);
             this.uploadFolder(message, callbackContext);
             return true;
         }
@@ -131,13 +124,13 @@ public class DropboxPlugin extends CordovaPlugin {
                     callbackContext.success(jsonArray);
                 } catch (Unauthorized e) {
                     e.printStackTrace();
-                    callbackContext.error("DropboxPlugin Error");
+                    callbackContext.error(PLUGIN_ERROR);
                 } catch (DbxException e) {
                     e.printStackTrace();
-                    callbackContext.error("DropboxPlugin Error");
+                    callbackContext.error(PLUGIN_ERROR);
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    callbackContext.error("DropboxPlugin Error");
+                    callbackContext.error(PLUGIN_ERROR);
                 }
             }
         });
@@ -178,7 +171,7 @@ public class DropboxPlugin extends CordovaPlugin {
                     });
                 } catch (Unauthorized e) {
                     e.printStackTrace();
-                    callbackContext.error("DropboxPlugin Error");
+                    callbackContext.error(PLUGIN_ERROR);
                 }
             }
         });
@@ -209,17 +202,17 @@ public class DropboxPlugin extends CordovaPlugin {
                         buf.close();
                     } catch (IOException e) {
                         e.printStackTrace();
-                        callbackContext.error("DropboxPlugin Error");
+                        callbackContext.error(PLUGIN_ERROR);
                     } finally {
                         file.close();
                     }
                     
                 } catch (Unauthorized e) {
                     e.printStackTrace();
-                    callbackContext.error("DropboxPlugin Error");
+                    callbackContext.error(PLUGIN_ERROR);
                 } catch (DbxException e) {
                     e.printStackTrace();
-                    callbackContext.error("DropboxPlugin Error");
+                    callbackContext.error(PLUGIN_ERROR);
                 } 
             }
         });
@@ -242,16 +235,16 @@ public class DropboxPlugin extends CordovaPlugin {
                         callbackContext.success(contents);
                     } catch (IOException e) {
                         e.printStackTrace();
-                        callbackContext.error("DropboxPlugin Error");
+                        callbackContext.error(PLUGIN_ERROR);
                     } finally {
                         file.close();
                     }
                 } catch (Unauthorized e) {
                     e.printStackTrace();
-                    callbackContext.error("DropboxPlugin Error");
+                    callbackContext.error(PLUGIN_ERROR);
                 } catch (DbxException e) {
                     e.printStackTrace();
-                    callbackContext.error("DropboxPlugin Error");
+                    callbackContext.error(PLUGIN_ERROR);
                 }
             }
         });
@@ -295,15 +288,15 @@ public class DropboxPlugin extends CordovaPlugin {
                     });
                 } catch (Unauthorized e) {
                     e.printStackTrace();
-                    callbackContext.error("DropboxPlugin Error");
+                    callbackContext.error(PLUGIN_ERROR);
                 } catch (DbxException e) {
                     e.printStackTrace();
-                    callbackContext.error("DropboxPlugin Error");
+                    callbackContext.error(PLUGIN_ERROR);
                 } catch (IOException e) {
                     e.printStackTrace();
-                    callbackContext.error("DropboxPlugin Error");
+                    callbackContext.error(PLUGIN_ERROR);
                 } catch (JSONException e) {
-                    callbackContext.error("DropboxPlugin Error");
+                    callbackContext.error(PLUGIN_ERROR);
                 }
             }
         });
@@ -382,15 +375,15 @@ public class DropboxPlugin extends CordovaPlugin {
                     }
                 } catch (Unauthorized e) {
                     e.printStackTrace();
-                    callbackContext.error("DropboxPlugin Error");
+                    callbackContext.error(PLUGIN_ERROR);
                 } catch (DbxException e) {
                     e.printStackTrace();
-                    callbackContext.error("DropboxPlugin Error");
+                    callbackContext.error(PLUGIN_ERROR);
                 } catch (IOException e) {
                     e.printStackTrace();
-                    callbackContext.error("DropboxPlugin Error");
+                    callbackContext.error(PLUGIN_ERROR);
                 } catch (JSONException e) {
-                    callbackContext.error("DropboxPlugin Error");
+                    callbackContext.error(PLUGIN_ERROR);
                 }
             }
         });
