@@ -14,7 +14,7 @@ dropbox.link();
 
 List the Dropbox App's root folder:
 ```
-dropbox.listFolder("/").done(function (files) {
+dropbox.listFolder('/').done(function(files) {
     // call to listFolder successful
     // each object index in files have properties: path, modifiedTime, size, and isFolder
 }).fail(function() {
@@ -24,7 +24,7 @@ dropbox.listFolder("/").done(function (files) {
 
 Upload a file to Dropbox:
 ```
-dropbox.uploadFile("file:///storage/sdcard0/DCIM/Camera/avideofile.mp4").done(function () {
+dropbox.uploadFile('file:///storage/sdcard0/DCIM/Camera/SomeVideo.mp4').done(function () {
     // call to uploadFile successful
     // you pass a local URI to this method
 }).fail(function() {
@@ -34,7 +34,7 @@ dropbox.uploadFile("file:///storage/sdcard0/DCIM/Camera/avideofile.mp4").done(fu
 
 Upload a folder to Dropbox (grabs all subfolders & files):
 ```
-dropbox.uploadFolder("file:///storage/sdcard0").done(function () {
+dropbox.uploadFolder('file:///storage/sdcard0').done(function () {
     // call to uploadFolder successful
     // you pass a local URI to this method
 }).fail(function() {
