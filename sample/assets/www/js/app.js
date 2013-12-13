@@ -12,11 +12,7 @@ var app = (function() {
             file;
         dropbox.listFolder(app.path).done(function (files) {
             l = files.length;
-            if (l > 0) {
-                $("#noFiles").hide();
-            } else {
-                $("#noFiles").show();
-            }
+            (l > 0) ? $("#noFiles").hide() : $("#noFiles").show();
             for (i=0; i<l; i++) {
                 file = files[i];
                 if (file.isFolder) {
@@ -110,11 +106,7 @@ var app = (function() {
                 getParentFolder();
             }
         } else if ($('#dropboxView').is(':visible')) {
-            if ($('#path').text() == '/') {
-                showExitConfirm();
-            } else {
-                window.history.back();
-            }
+            ($('#path').text() == '/') ? showExitConfirm() : window.history.back();
         } else { // we're on welcomeView
             showExitConfirm();
         }
