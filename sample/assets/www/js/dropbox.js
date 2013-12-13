@@ -135,4 +135,4 @@ var dropbox = (function() {
         uploadFolder: uploadFolder
     }
 
-}());
+})();
