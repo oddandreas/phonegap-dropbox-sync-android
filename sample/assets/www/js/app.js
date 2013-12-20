@@ -9,12 +9,25 @@ var app = (function() {
         var i,
             l,
             html = "",
-            file;
+            file,
+            fileArray = [],
+            folderArray = [];
         dropbox.listFolder(app.path).done(function (files) {
             l = files.length;
             (l > 0) ? $("#noFiles").hide() : $("#noFiles").show();
-            for (i=0; i<l; i++) {
+            for (i = 0; i < l; i++) {
                 file = files[i];
+                if (file.isFolder) {
+                    folderArray.push(file);
+                } else {
+                    fileArray.push(file);
+                }
+            }
+            folderArray.sortByKey('path');
+            fileArray.sortByKey('path');
+            var fileList = folderArray.concat(fileArray);
+            for (i = 0; i < l; i++) {
+                file = fileList[i];
                 if (file.isFolder) {
                     html += '<li fo="fo" class="topcoat-list__item">' +
                     '<a href="#' + encodeURIComponent(file.path) + '" class="folder">' +
@@ -28,13 +41,6 @@ var app = (function() {
                 }
             }
             $("#fileList").html(html);
-            //sort the list now
-            var fileList = $('#fileList'),
-                folderItems = fileList.children('li[fo="fo"]').get(),
-                fileItems = fileList.children('li[fi="fi"]').get();
-            fileList.html('');
-            sortAndAppendList(folderItems, fileList);
-            sortAndAppendList(fileItems, fileList);
         });
     }
     
@@ -226,40 +232,47 @@ var app = (function() {
         }
     });
     
-    function sortAndAppendList(items, list) {
-        items.sort(function(a, b) {
-            return $(a).text().toUpperCase().localeCompare($(b).text().toUpperCase());
+    Array.prototype.sortByKey = function(key) {
+        this.sort(function(a, b) {
+            var x = a[key].toLowerCase(); 
+            var y = b[key].toLowerCase();
+            return ((x < y) ? -1 : ((x > y) ? 1 : 0));
         });
-        $.each(items, function(idx, itm) { 
-            list.append(itm);
-        });
-    }
+    };
     
     function appendToLocalFileList(entries) {
         var fileCount = entries.length,
-        html = '';
+        	html = '',
+        	file,
+        	fileArray = [],
+        	folderArray = [];
         if (fileCount > 0) {
             for (var i = 0; i < fileCount; i++) {
-                if (entries[i].isDirectory) {
+                file = entries[i];
+                if (file.isDirectory) {
+                    folderArray.push(file);
+                } else {
+                    fileArray.push(file);
+                }
+            }
+            folderArray.sortByKey('name');
+            fileArray.sortByKey('name');
+            var fileList = folderArray.concat(fileArray);
+            for (var i = 0; i < fileCount; i++) {
+            	file = fileList[i];
+                if (file.isDirectory) {
                     html += '<li fo="fo" class="topcoat-list__item">' + '<a href="#localFile" class="folder" ' +
-                    'fullPath="'+ entries[i].fullPath +'" fileName="'+ entries[i].name +'">' +
+                    'fullPath="'+ file.fullPath +'" fileName="'+ file.name +'">' +
                     '<img src="img/icon-folder.png" />' +
-                    entries[i].name + '</a></li>';
+                    file.name + '</a></li>';
                 } else {
                     html += '<li fi="fi" class="topcoat-list__item">' + '<a href="#localFile" class="file" ' +
-                    'fullPath="'+ entries[i].fullPath +'" fileName="'+ entries[i].name +'">' +
+                    'fullPath="'+ file.fullPath +'" fileName="'+ file.name +'">' +
                     '<img src="img/icon-file.png" />' +
-                    entries[i].name + '</a></li>';
+                    file.name + '</a></li>';
                 }
             }
             $('#localFileList').html(html);
-            //sort the list now
-            var localFileList = $('#localFileList'),
-                folderItems = localFileList.children('li[fo="fo"]').get(),
-                fileItems = localFileList.children('li[fi="fi"]').get();
-            localFileList.html('');
-            sortAndAppendList(folderItems, localFileList);
-            sortAndAppendList(fileItems, localFileList);
         } else {
             html = '<li class="topcoat-list__item" style="padding:5px;">No files found in this directory.</li>';
             $('#localFileList').html(html);
