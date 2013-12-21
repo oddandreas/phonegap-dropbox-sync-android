@@ -167,7 +167,7 @@ var app = (function() {
        event.preventDefault();
     }).on('taphold', 'a[href="#localFile"]', function(event) {
         var uploadPath = $(this).attr('fullPath'),
-        fileName = $(this).attr('fileName');
+            fileName = $(this).attr('fileName');
         if ($(this).hasClass('file')) {
             showConfirm('Upload ' + fileName + ' to Dropbox?', 'Confirm File Upload', ['Yes', 'No'], function(buttonIndex) {
                 if (buttonIndex == 1) {
