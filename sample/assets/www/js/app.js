@@ -116,13 +116,6 @@ var app = (function() {
         } else { // we're on welcomeView
             showExitConfirm();
         }
-        function showExitConfirm() {
-            showConfirm('Exit PhoneGap Sync?', 'Confirm Exit', ['Exit', 'Cancel'], function(buttonIndex) {
-                if (buttonIndex == 1) {
-                    navigator.app.exitApp(); // close the app
-                }
-            });
-        }
         event.preventDefault();
     });
     
@@ -216,7 +209,7 @@ var app = (function() {
                 break;
             default:
                 //portrait
-                $('#dropboxView').is(':visible') ? loadIcon.css('left', '60px') : loadIcon.css('left', '70px');
+                ($('#dropboxView').is(':visible')) ? loadIcon.css('left', '60px') : loadIcon.css('left', '70px');
                 break; 
         }
     });
@@ -348,6 +341,14 @@ var app = (function() {
             title,   // title string
             labels   // buttonLabels array
         );
+    }
+    
+    function showExitConfirm() {
+        showConfirm('Exit PhoneGap Sync?', 'Confirm Exit', ['Exit', 'Cancel'], function(buttonIndex) {
+            if (buttonIndex == 1) {
+                navigator.app.exitApp(); // close the app
+            }
+        });
     }
     
     function showLoader() {
