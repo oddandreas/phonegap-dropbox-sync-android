@@ -37,6 +37,7 @@ a {
 
 #localFileListScroller {
     width: 100%;
+    border-right: none;
 }
 
 #content {
