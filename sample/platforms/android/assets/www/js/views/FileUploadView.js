@@ -1,18 +1,18 @@
 var FileUploadView = function (template, listTemplate) {
 
-	var _me = this;
-	
-	this.localFileFullPath = '';
-	
-	this.listTemplate = listTemplate;
-	
+    var _me = this;
+
+    this.localFileFullPath = '';
+
+    this.listTemplate = listTemplate;
+
     this.initialize = function () {
-    	
+    
         this.el = $('<div/>');
          
          this.el.on('click', '#localFileList a[href="#localFile"]', function(event) {
             if (! $(this).hasClass('file')) {
-            	_me.localFileFullPath = $(this).attr('fullPath');
+                _me.localFileFullPath = $(this).attr('fullPath');
                 _me.getFolderWithPath();
             }
             event.preventDefault();
@@ -68,17 +68,17 @@ var FileUploadView = function (template, listTemplate) {
          });
          
          $(window).off('orientationchange').on('orientationchange', function(event) {
-        	 switch(window.orientation) {
- 	            case -90:
- 	            case 90:
- 	                // landscape
- 	                app.loadIcon.css('left', '90px');
- 	                break;
- 	            default:
- 	                //portrait
- 	            	app.loadIcon.css('left', '70px');
- 	                break; 
- 	        }
+             switch(window.orientation) {
+                case -90:
+                case 90:
+                    // landscape
+                    app.loadIcon.css('left', '90px');
+                    break;
+                default:
+                    //portrait
+                    app.loadIcon.css('left', '70px');
+                    break; 
+            }
          });
          
     }; // end initialize
@@ -90,7 +90,7 @@ var FileUploadView = function (template, listTemplate) {
     
     this.getFSRoot = function(fileSystem) { // not really root on first run, but you can get to root if you're rooted by clicking back
         window.resolveLocalFileSystemURI("file:///storage", function(dir) {
-        	_me.localFileFullPath = dir.fullPath;
+            _me.localFileFullPath = dir.fullPath;
            var directoryReader = dir.createReader();
            directoryReader.readEntries(_me.readerSuccess,_me.readerFail);
         }, function(err){
@@ -111,10 +111,10 @@ var FileUploadView = function (template, listTemplate) {
 
 FileUploadView.prototype.appendToLocalFileList = function(entries) {
     var fileCount = entries.length,
-    	html = '',
-    	file,
-    	fileArray = [],
-    	folderArray = [];
+        html = '',
+        file,
+        fileArray = [],
+        folderArray = [];
     if (fileCount > 0) {
         for (var i = 0; i < fileCount; i++) {
             file = entries[i];
@@ -137,7 +137,7 @@ FileUploadView.prototype.appendToLocalFileList = function(entries) {
 };
 
 FileUploadView.prototype.getFolderWithPath = function() {
-	var _me = this;
+    var _me = this;
     window.resolveLocalFileSystemURI(_me.localFileFullPath, function(dir) {
         var directoryReader = dir.createReader();
         directoryReader.readEntries(_me.readerSuccess,_me.readerFail);
@@ -147,11 +147,11 @@ FileUploadView.prototype.getFolderWithPath = function() {
 };
 
 FileUploadView.prototype.getParentFolder = function() {
-	var _me = this;
+    var _me = this;
     if (_me.localFileFullPath != 'file:///storage/sdcard0' && _me.localFileFullPath != 'file:///storage/sdcard') {
         window.resolveLocalFileSystemURI(_me.localFileFullPath, function(dir) {
             dir.getParent(function(parent) {
-            	_me.localFileFullPath = parent.fullPath;
+                _me.localFileFullPath = parent.fullPath;
                 var directoryReader = parent.createReader(); // this gives the wrong path when at file:///storage/sdcard
                 directoryReader.readEntries(_me.readerSuccess,_me.readerFail);
             }, function(err){
@@ -162,7 +162,7 @@ FileUploadView.prototype.getParentFolder = function() {
         });
     } else {
         window.resolveLocalFileSystemURI('file:///storage', function(dir) {
-        	_me.localFileFullPath = dir.fullPath;
+            _me.localFileFullPath = dir.fullPath;
             var directoryReader = dir.createReader();
             directoryReader.readEntries(_me.readerSuccess,_me.readerFail);
         }, function(err){
@@ -172,8 +172,8 @@ FileUploadView.prototype.getParentFolder = function() {
 };
 
 FileUploadView.prototype.FSfail = function(err) {
-	console.log("FSfail and error is below");
-	console.log(err);
+    console.log("FSfail and error is below");
+    console.log(err);
 };
         
 FileUploadView.prototype.readerFail = function(error) {
