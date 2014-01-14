@@ -10,8 +10,8 @@ var WelcomeView = function (template) {
         });
         
         this.el.on('click', '#btn-back', function(event) {
-        	app.showExitConfirm();
-        	event.preventDefault();
+            app.showExitConfirm();
+            event.preventDefault();
         });
          
     };
