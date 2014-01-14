@@ -4,7 +4,8 @@ A PhoneGap plugin for the [Dropbox Sync API](https://www.dropbox.com/developers/
 
 Read my blog post [here](http://rossmartindev.blogspot.com/2013/08/phonegap-plugin-for-dropbox-sync-api.html)
 
-__1-14-14 The sample app is now using handlebars.js, fastclick.js, and pageslider.js - only 1 view is in the DOM at a time now, this improved performance a lot.__
+***```Update 1-14-14```***<br>**The sample app is now using handlebars.js, fastclick.js, and pageslider.js**<br>
+**Only 1 view is in the DOM at a time now, this improved performance a lot**
 
 Sample Usage:
 -----------
