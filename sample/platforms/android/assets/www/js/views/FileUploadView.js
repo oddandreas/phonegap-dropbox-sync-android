@@ -18,7 +18,7 @@ var FileUploadView = function (template, listTemplate) {
             event.preventDefault();
          });
          
-         this.el.on('taphold', 'a[href="#localFile"]', function(event) {
+         this.el.on('taphold', '#localFileList a[href="#localFile"]', function(event) {
              var uploadPath = $(event.target).attr('fullPath'),
                  fileName = $(event.target).attr('fileName');
              if ($(this).hasClass('file')) {
