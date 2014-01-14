@@ -9,8 +9,8 @@ var app = (function() {
         slider = new PageSlider($('body'));
     
     var showWelcomeView = function() {
-    	var welcomeView = new WelcomeView(welcomeViewTpl);
-    	slider.slidePageFrom(welcomeView.render().el, 'left');
+		var welcomeView = new WelcomeView(welcomeViewTpl);
+		slider.slidePageFrom(welcomeView.render().el, 'left');
     };
 
     var showDropboxView = function() {
@@ -30,8 +30,8 @@ var app = (function() {
     };
     
     var showFileUploadView = function() {
-    	var fileUploadView = new FileUploadView(fileUploadViewTpl, localFileListTpl);
-    	slider.slidePageFrom(fileUploadView.render().el, 'right');
+		var fileUploadView = new FileUploadView(fileUploadViewTpl, localFileListTpl);
+		slider.slidePageFrom(fileUploadView.render().el, 'right');
         
         loadIcon.css('left', '70px');
         
