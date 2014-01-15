@@ -1,8 +1,8 @@
 var DropboxView = function (template, listTemplate) {
 
     this.initialize = function () {
-    	
-    	this.listTemplate = listTemplate;
+
+        this.listTemplate = listTemplate;
         
         if (! template) return; // making instance just for listFolder method
         
