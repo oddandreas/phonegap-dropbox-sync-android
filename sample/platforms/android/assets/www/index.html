@@ -20,6 +20,8 @@
 	        <div class="topcoat-navigation-bar__item center half">
 	            <h1 class="topcoat-navigation-bar__title">PhoneGap Sync</h1>
 	        </div>
+            <div class="topcoat-navigation-bar__item right quarter">
+            </div>
 		</div>
 		<div id="containerBelowNavBar">
 			<div id="welcomeView">
@@ -135,6 +137,8 @@
 	                 </a>
 	            </li>
 	        {{/if}}
+        {{else}}
+            <li class="topcoat-list__item" style="padding:5px;">No files found in this directory.</li>
         {{/each}}
     </script>
 

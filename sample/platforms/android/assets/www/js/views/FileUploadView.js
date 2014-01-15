@@ -128,11 +128,10 @@ FileUploadView.prototype.appendToLocalFileList = function(entries) {
         fileArray.sortByKey('name');
         var fileList = folderArray.concat(fileArray);
         html = this.listTemplate(fileList);
-        $('#localFileList').html(html);
     } else {
-        html = '<li class="topcoat-list__item" style="padding:5px;">No files found in this directory.</li>';
-        $('#localFileList').html(html);
+        html = this.listTemplate();
     }
+    $('#localFileList').html(html);
     (this.localFileFullPath != '') ? $('#localPath').text(this.localFileFullPath) : $('#localPath').text('file:///storage');
 };
 
@@ -179,4 +178,3 @@ FileUploadView.prototype.FSfail = function(err) {
 FileUploadView.prototype.readerFail = function(error) {
     alert("Failed to list directory contents: " + error.code);
 };
-// end local filesystem arithmetic **

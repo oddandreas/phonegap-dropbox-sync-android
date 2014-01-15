@@ -4,6 +4,7 @@ var app = (function() {
         welcomeViewTpl = Handlebars.compile($('#welcomeView-tpl').html()),
         dropboxViewTpl = Handlebars.compile($('#dropboxView-tpl').html()),
         fileListTpl = Handlebars.compile($('#fileList-tpl').html()),
+        dropboxView = new DropboxView(null, fileListTpl), // listFolder() needs available in window
         fileUploadViewTpl = Handlebars.compile($('#fileUploadView-tpl').html()),
         localFileListTpl = Handlebars.compile($('#localFileList-tpl').html()),
         slider = new PageSlider($('body'));
@@ -14,7 +15,7 @@ var app = (function() {
     };
 
     var showDropboxView = function() {
-        var dropboxView = new DropboxView(dropboxViewTpl, fileListTpl);
+        dropboxView = new DropboxView(dropboxViewTpl, fileListTpl);
         slider.slidePageFrom(dropboxView.render().el, ($('#fileUploadView').length > 0) ? 'left' : 'right');
         
         var h = $('#content').height(),
@@ -91,7 +92,7 @@ var app = (function() {
 
     return {
         path: '/',
-        listDropboxFolder: new DropboxView().listFolder,
+        dropboxView: dropboxView,
         showWelcomeView: showWelcomeView,
         showFileUploadView: showFileUploadView,
         showDropboxView: showDropboxView,
@@ -115,5 +116,7 @@ function dropbox_onSyncStatusChange(status) {
 
 // Called by observer in DropboxSync plugin when a file is changed
 function dropbox_fileChange() {
-    app.listDropboxFolder();
+	if ($('#dropboxView').length > 0) {
+		app.dropboxView.listFolder();
+	}
 }

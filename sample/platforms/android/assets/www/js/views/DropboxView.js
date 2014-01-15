@@ -1,12 +1,12 @@
 var DropboxView = function (template, listTemplate) {
 
     this.initialize = function () {
+    	
+    	this.listTemplate = listTemplate;
         
         if (! template) return; // making instance just for listFolder method
         
         var _me = this;
-        
-        this.listTemplate = listTemplate;
         
         this.el = $('<div/>');
 
@@ -100,7 +100,7 @@ DropboxView.prototype.listFolder = function() {
         fileArray = [],
         folderArray = [],
         _me = this;
-    dropbox.listFolder(app.path).done(function (files) {
+    dropbox.listFolder(app.path).done(function(files) {
         l = files.length;
         (l > 0) ? $("#noFiles").hide() : $("#noFiles").show();
         for (i = 0; i < l; i++) {
