@@ -50,7 +50,7 @@ var DropboxView = function (template, listTemplate) {
         });
         
         this.el.on('click', '#btn-back', function(event) {
-            ($('#path').text() == '/') ? app.showExitConfirm() : window.history.back();
+            (app.path == '/') ? app.showExitConfirm() : window.history.back();
             event.preventDefault();
         });
         
@@ -118,5 +118,7 @@ DropboxView.prototype.listFolder = function() {
         var fileList = folderArray.concat(fileArray);
         html = _me.listTemplate(fileList);
         $("#fileList").html(html);
+        app.path = (app.path) ? app.path : '/';
+        $('#path').html(app.path);
     });
 };
