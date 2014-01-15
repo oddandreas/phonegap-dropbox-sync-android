@@ -104,7 +104,7 @@ var app = (function() {
     
 })();
 
-// Called from onActivityResult in the app's main activity (dropboxAndroidCordova)
+// Called from onActivityResult in the app's main activity
 function dropbox_linked() {
     app.showDropboxView();
 }
@@ -116,7 +116,7 @@ function dropbox_onSyncStatusChange(status) {
 
 // Called by observer in DropboxSync plugin when a file is changed
 function dropbox_fileChange() {
-	if ($('#dropboxView').length > 0) {
-		app.dropboxView.listFolder();
-	}
+    if ($('#dropboxView').length > 0) {
+        app.dropboxView.listFolder();
+    }
 }
