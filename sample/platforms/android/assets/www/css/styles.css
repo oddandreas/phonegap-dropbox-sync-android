@@ -41,13 +41,13 @@ ul {
     width: 300px;
     overflow: auto;
     -webkit-overflow-scrolling: touch;
-    border-right: solid 1px #3b3e40;
+    padding-right: 6px; /* needed for webkit scrollbar */
     margin-top:29px;
 }
 
 #localFileListScroller {
     width: 100%;
-    border-right: none;
+    padding-right: 0px; /* scrollbar is handled correctly with 100% width */
 }
 
 #content {
@@ -144,4 +144,13 @@ ul {
 
 .page {
 	text-align: left;
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+}
+ 
+::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background: #a1a0a1;
 }
