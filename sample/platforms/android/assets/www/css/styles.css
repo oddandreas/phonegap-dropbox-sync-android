@@ -96,8 +96,8 @@ ul {
 }
 
 #welcomeView {
-	padding:35px 70px 30px 70px; 
-	font-size: 1.1rem;
+    padding:35px 70px 30px 70px; 
+    font-size: 1.1rem;
 }
 
 #welcomeViewLinkContainer {
@@ -131,15 +131,15 @@ ul {
 }
 
 #btn-backToDropboxView {
-	font-size: 12px; 
-	padding: 0px 8px !important;
+    font-size: 12px; 
+    padding: 0px 8px !important;
 }
 
 #noFiles {
-	position:absolute;
-	top:260px;
-	left:110px;
-	display:none;
+    position:absolute;
+    top:260px;
+    left:110px;
+    display:none;
 }
 
 .page {
