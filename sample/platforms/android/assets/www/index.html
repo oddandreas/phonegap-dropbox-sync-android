@@ -79,13 +79,13 @@
     <script id="fileList-tpl" type="text/x-handlebars-template">
         {{#each this}}
             {{#if isFolder}}
-                <li fo="fo" class="topcoat-list__item">
+                <li class="topcoat-list__item">
                     <a href="#{{encodedPath}}" class="folder">
                         <img src="img/icon-folder.png" /> {{fileName}}
                      </a>
                 </li>
             {{else}}
-                <li fi="fi" class="topcoat-list__item">
+                <li class="topcoat-list__item">
                     <a href="#{{encodedPath}}" class="file">
                         <img src="img/icon-file.png" /> {{fileName}}
                      </a>
@@ -125,14 +125,14 @@
     <script id="localFileList-tpl" type="text/x-handlebars-template">
         {{#each this}}
             {{#if isDirectory}}
-                <li fo="fo" class="topcoat-list__item">
-                    <a href="#localFile" class="folder" fullPath="{{fullPath}}" fileName="{{name}}">
+                <li class="topcoat-list__item">
+                    <a href="#" class="folder" fullPath="{{fullPath}}" fileName="{{name}}">
                         <img src="img/icon-folder.png" /> {{name}}
                      </a>
                 </li>
             {{else}}
-                <li fi="fi" class="topcoat-list__item">
-                    <a href="#localFile" class="file" fullPath="{{fullPath}}" fileName="{{name}}">
+                <li class="topcoat-list__item">
+                    <a href="#" class="file" fullPath="{{fullPath}}" fileName="{{name}}">
                         <img src="img/icon-file.png" /> {{name}}
                      </a>
                 </li>

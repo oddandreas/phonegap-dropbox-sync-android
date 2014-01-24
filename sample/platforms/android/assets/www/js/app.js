@@ -45,6 +45,8 @@ var app = (function() {
     };
     
     document.addEventListener("deviceReady", function() {   // ready for kickoff
+        FastClick.attach(document.body);
+        
         if (navigator.notification) { // Override default HTML alert with native dialog
             window.confirm = function (message, title, labels, success) {
                 navigator.notification.confirm(

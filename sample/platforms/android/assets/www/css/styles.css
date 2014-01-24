@@ -42,7 +42,7 @@ ul {
     overflow: auto;
     -webkit-overflow-scrolling: touch;
     padding-right: 6px; /* needed for webkit scrollbar */
-    margin-top:29px;
+    margin-top:28px;
 }
 
 #localFileListScroller {
@@ -56,7 +56,7 @@ ul {
     bottom: 4px;
     left: 305px;
     right:0px;
-    padding:0;
+    padding:0px 5px;
     margin:0;
     overflow: auto;
     -webkit-overflow-scrolling: touch;
@@ -128,6 +128,10 @@ ul {
 
 #path, #localPath {
     margin-top: 64px;
+}
+
+#filePath {
+    text-align: center;
 }
 
 #btn-backToDropboxView {

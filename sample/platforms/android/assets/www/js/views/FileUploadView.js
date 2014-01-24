@@ -3,83 +3,87 @@ var FileUploadView = function (template, listTemplate) {
     var _me = this;
 
     this.localFileFullPath = '';
+    
+    this.isTapHolding = false;
 
     this.listTemplate = listTemplate;
 
     this.initialize = function () {
-    
+
         this.el = $('<div/>');
-         
-         this.el.on('click', '#localFileList a[href="#localFile"]', function(event) {
-            if (! $(this).hasClass('file')) {
-                _me.localFileFullPath = $(this).attr('fullPath');
-                _me.getFolderWithPath();
+
+        this.el.on('click', '#localFileList .folder', function (event) {
+            if (_me.isTapHolding) return;
+            _me.localFileFullPath = $(this).attr('fullPath');
+            _me.getFolderWithPath();
+            event.preventDefault();
+        });
+
+        this.el.on('taphold', '#localFileList a[href="#localFile"]', function (event) {
+            _me.isTapHolding = true;
+            var uploadPath = $(event.target).attr('fullPath'),
+                fileName = $(event.target).attr('fileName');
+            if ($(event.target).hasClass('file')) {
+                window.confirm('Upload ' + fileName + ' to Dropbox?', 'Confirm File Upload', ['Yes', 'No'], function (buttonIndex) {
+                    if (buttonIndex == 1) {
+                        app.showLoader();
+                        dropbox.uploadFile(uploadPath).done(function (result) {
+                            app.hideLoader();
+                        }).fail(function (err) {
+                            console.log('dropbox.uploadFile fail, err -> ' + err);
+                            app.hideLoader();
+                        });
+                    }
+                    _me.isTapHolding = false;
+                });
+            } else {
+                window.confirm('Upload ' + fileName + ' folder to Dropbox?', 'Confirm Folder Upload', ['Yes', 'No'], function (buttonIndex) {
+                    if (buttonIndex == 1) {
+                        app.showLoader();
+                        dropbox.uploadFolder(uploadPath).done(function (result) {
+                            app.hideLoader();
+                        }).fail(function (err) {
+                            console.log('dropbox.uploadFolder fail, err -> ' + err);
+                            app.hideLoader();
+                        });
+                    }
+                    _me.isTapHolding = false;
+                });
             }
             event.preventDefault();
-         });
-         
-         this.el.on('taphold', '#localFileList a[href="#localFile"]', function(event) {
-             var uploadPath = $(event.target).attr('fullPath'),
-                 fileName = $(event.target).attr('fileName');
-             if ($(this).hasClass('file')) {
-                 window.confirm('Upload ' + fileName + ' to Dropbox?', 'Confirm File Upload', ['Yes', 'No'], function(buttonIndex) {
-                     if (buttonIndex == 1) {
-                         app.showLoader();
-                         dropbox.uploadFile(uploadPath).done(function(result) {
-                             app.hideLoader();
-                         }).fail(function(err) {
-                             console.log('dropbox.uploadFile fail, err -> ' + err);
-                             app.hideLoader();
-                         });
-                     }
-                 });
-             } else {
-                 window.confirm('Upload ' + fileName + ' folder to Dropbox?', 'Confirm Folder Upload', ['Yes', 'No'], function(buttonIndex) {
-                     if (buttonIndex == 1) {
-                         app.showLoader();
-                         dropbox.uploadFolder(uploadPath).done(function(result) {
-                             app.hideLoader();
-                         }).fail(function(err) {
-                             console.log('dropbox.uploadFolder fail, err -> ' + err);
-                             app.hideLoader();
-                         });
-                     }
-                 });
-             }
-             event.preventDefault();
-         });
-         
-         this.el.on('click', '#btn-backToDropboxView', function(event) {
-             app.showDropboxView();
-             event.preventDefault();
-         });
-         
-         this.el.on('click', '#btn-back', function(event) {
-             if (_me.localFileFullPath == 'file:///') { // if we're at root
-                 window.confirm('Go back to Dropbox list?', 'Show Dropbox', ['Yes', 'No'], function(buttonIndex) {
-                     if (buttonIndex == 1) {
-                         app.showDropboxView();
-                     }
-                 });
-             } else {
-                 _me.getParentFolder();
-             }
-             event.preventDefault();
-         });
-         
-         $(window).off('orientationchange').on('orientationchange', function(event) {
-             switch(window.orientation) {
-                case -90:
-                case 90:
-                    // landscape
-                    app.loadIcon.css('left', '90px');
-                    break;
-                default:
-                    //portrait
-                    app.loadIcon.css('left', '70px');
-                    break; 
+        });
+
+        this.el.on('click', '#btn-backToDropboxView', function (event) {
+            app.showDropboxView();
+            event.preventDefault();
+        });
+
+        this.el.on('click', '#btn-back', function (event) {
+            if (_me.localFileFullPath == 'file:///') { // if we're at root
+                window.confirm('Go back to Dropbox list?', 'Show Dropbox', ['Yes', 'No'], function (buttonIndex) {
+                    if (buttonIndex == 1) {
+                        app.showDropboxView();
+                    }
+                });
+            } else {
+                _me.getParentFolder();
             }
-         });
+            event.preventDefault();
+        });
+
+        $(window).off('orientationchange').on('orientationchange', function (event) {
+            switch (window.orientation) {
+            case -90:
+            case 90:
+                // landscape
+                app.loadIcon.css('left', '90px');
+                break;
+            default:
+                //portrait
+                app.loadIcon.css('left', '70px');
+                break;
+            }
+        });
          
     }; // end initialize
 
