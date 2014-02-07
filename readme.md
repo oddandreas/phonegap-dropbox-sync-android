@@ -45,7 +45,7 @@ var doRecursively = true;
 
 dropbox.uploadFolder(localFileUri, dropboxFolderPath, doRecursively).done(function() {
     // dropboxFolderPath is the Dropbox folder you want to upload the files/folders into
-    // you can optionally upload all subfolders & files by passing true in the 3rd parameter
+    // you can optionally upload all subfolders & files within the given local file URI by passing true in the 3rd parameter
 }).fail(function() {
     
 });
