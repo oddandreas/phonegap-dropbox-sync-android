@@ -28,7 +28,7 @@ dropbox.listFolder('/').done(function(files) {
 Upload a file to Dropbox:
 ```
 var localFileUri = "file:///storage/sdcard0/DCIM/Camera/SomeVideo.mp4";
-var dropboxFolderPath = "/someFolder/withinDropbox";
+var dropboxFolderPath = "/someFolder";
 
 dropbox.uploadFile(localFileUri, dropboxFolderPath).done(function() {
     
@@ -40,7 +40,7 @@ dropbox.uploadFile(localFileUri, dropboxFolderPath).done(function() {
 Upload a folder to Dropbox:
 ```
 var localFileUri = "file:///storage/sdcard0";
-var dropboxFolderPath = "/someFolder/withinDropbox";
+var dropboxFolderPath = "/someFolder";
 var doRecursively = true;
 
 dropbox.uploadFolder(localFileUri, dropboxFolderPath, doRecursively).done(function() {
