@@ -41,11 +41,11 @@ Upload a folder to Dropbox:
 ```
 var localFileUri = "file:///storage/sdcard0";
 var dropboxFolderPath = "/someFolder";
-var doRecursively = true;
+var doRecursive = true;
 
-dropbox.uploadFolder(localFileUri, dropboxFolderPath, doRecursively).done(function() {
+dropbox.uploadFolder(localFileUri, dropboxFolderPath, doRecursive).done(function() {
     // dropboxFolderPath is the Dropbox folder you want to upload the files/folders into
-    // you can optionally upload all subfolders & files within the given local file URI by passing true in the 3rd parameter
+    // you can upload all subfolders & files within the given local file URI by passing true in the 3rd parameter
 }).fail(function() {
     
 });
