@@ -18,7 +18,7 @@ dropbox.link();
 
 List the Dropbox App's root folder:
 ```
-dropbox.listFolder('/').done(function(files) {
+dropbox.listFolder("/").done(function(files) {
     // each object index in files have properties: path, modifiedTime, size, and isFolder
 });
 ```
