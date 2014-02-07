@@ -1,8 +1,6 @@
 var FileUploadView = function (template, listTemplate) {
 
     var _me = this;
-
-    this.localFileFullPath = '';
     
     this.isTapHolding = false;
 
@@ -12,22 +10,23 @@ var FileUploadView = function (template, listTemplate) {
 
         this.el = $('<div/>');
 
-        this.el.on('click', '#localFileList .folder', function (event) {
+        this.el.on('click', '#localFileList .folder', function(event) {
             if (_me.isTapHolding) return;
-            _me.localFileFullPath = $(this).attr('fullPath');
+            app.localFileFullPath = $(this).attr('fullPath');
             _me.getFolderWithPath();
             event.preventDefault();
         });
 
-        this.el.on('taphold', '#localFileList a[href="#localFile"]', function (event) {
+        this.el.on('taphold', '#localFileList a[href="#localFile"]', function(event) {
             _me.isTapHolding = true;
-            var uploadPath = $(event.target).attr('fullPath'),
+            var fullPath = $(event.target).attr('fullPath'),
                 fileName = $(event.target).attr('fileName');
             if ($(event.target).hasClass('file')) {
-                window.confirm('Upload ' + fileName + ' to Dropbox?', 'Confirm File Upload', ['Yes', 'No'], function (buttonIndex) {
+                window.confirm('Upload ' + fileName + ' to Dropbox?', 'Confirm File Upload', ['Yes', 'No'], 
+                function (buttonIndex) {
                     if (buttonIndex == 1) {
                         app.showLoader();
-                        dropbox.uploadFile(uploadPath).done(function (result) {
+                        dropbox.uploadFile(fullPath, app.dropboxPath).done(function(result) {
                             app.hideLoader();
                         }).fail(function (err) {
                             console.log('dropbox.uploadFile fail, err -> ' + err);
@@ -37,10 +36,12 @@ var FileUploadView = function (template, listTemplate) {
                     _me.isTapHolding = false;
                 });
             } else {
-                window.confirm('Upload ' + fileName + ' folder to Dropbox?', 'Confirm Folder Upload', ['Yes', 'No'], function (buttonIndex) {
-                    if (buttonIndex == 1) {
+                window.confirm('Upload ' + fileName + ' folder to Dropbox?', 'Confirm Folder Upload', ['Yes', 'Yes (Recursive)', 'Cancel'], 
+                function (buttonIndex) {
+                    if (buttonIndex == 1 || buttonIndex == 2) {
                         app.showLoader();
-                        dropbox.uploadFolder(uploadPath).done(function (result) {
+                        var doRecursive = (buttonIndex == 2) ? true : false;
+                        dropbox.uploadFolder(fullPath, app.dropboxPath, doRecursive).done(function(result) {
                             app.hideLoader();
                         }).fail(function (err) {
                             console.log('dropbox.uploadFolder fail, err -> ' + err);
@@ -53,14 +54,15 @@ var FileUploadView = function (template, listTemplate) {
             event.preventDefault();
         });
 
-        this.el.on('click', '#btn-backToDropboxView', function (event) {
+        this.el.on('click', '#btn-backToDropboxView', function(event) {
             app.showDropboxView();
             event.preventDefault();
         });
 
-        this.el.on('click', '#btn-back', function (event) {
-            if (_me.localFileFullPath == 'file:///') { // if we're at root
-                window.confirm('Go back to Dropbox list?', 'Show Dropbox', ['Yes', 'No'], function (buttonIndex) {
+        this.el.on('click', '#btn-back', function(event) {
+            if (app.localFileFullPath == 'file:///') { // if we're at root
+                window.confirm('Go back to Dropbox list?', 'Show Dropbox', ['Yes', 'No'], 
+                function(buttonIndex) {
                     if (buttonIndex == 1) {
                         app.showDropboxView();
                     }
@@ -70,18 +72,20 @@ var FileUploadView = function (template, listTemplate) {
             }
             event.preventDefault();
         });
+        
+        window.onhashchange = null; // the notification dialog buttons can trigger a hashchange event, destroy the event listener
 
-        $(window).off('orientationchange').on('orientationchange', function (event) {
+        $(window).on('orientationchange', function (event) {
             switch (window.orientation) {
-            case -90:
-            case 90:
-                // landscape
-                app.loadIcon.css('left', '90px');
-                break;
-            default:
-                //portrait
-                app.loadIcon.css('left', '70px');
-                break;
+                case -90:
+                case 90:
+                    // landscape
+                    app.loadIcon.css('left', '90px');
+                    break;
+                default:
+                    //portrait
+                    app.loadIcon.css('left', '70px');
+                    break;
             }
         });
          
@@ -94,12 +98,12 @@ var FileUploadView = function (template, listTemplate) {
     
     this.getFSRoot = function(fileSystem) { // not really root on first run, but you can get to root if you're rooted by clicking back
         window.resolveLocalFileSystemURI("file:///storage", function(dir) {
-            _me.localFileFullPath = dir.fullPath;
+           app.localFileFullPath = dir.fullPath;
            var directoryReader = dir.createReader();
            directoryReader.readEntries(_me.readerSuccess,_me.readerFail);
         }, function(err){
            console.log('failed to get /storage directory, error ' + err.code + '\nfalling back to using fileSystem.root.fullPath');
-           _me.localFileFullPath = fileSystem.root.fullPath;
+           app.localFileFullPath = fileSystem.root.fullPath;
            var directoryReader = fileSystem.root.createReader();
            directoryReader.readEntries(_me.readerSuccess,_me.readerFail);
         });
@@ -136,12 +140,12 @@ FileUploadView.prototype.appendToLocalFileList = function(entries) {
         html = this.listTemplate();
     }
     $('#localFileList').html(html);
-    (this.localFileFullPath != '') ? $('#localPath').text(this.localFileFullPath) : $('#localPath').text('file:///storage');
+    $('#localPath').text( (app.localFileFullPath != '') ? app.localFileFullPath : 'file:///storage' );
 };
 
 FileUploadView.prototype.getFolderWithPath = function() {
     var _me = this;
-    window.resolveLocalFileSystemURI(_me.localFileFullPath, function(dir) {
+    window.resolveLocalFileSystemURI(app.localFileFullPath, function(dir) {
         var directoryReader = dir.createReader();
         directoryReader.readEntries(_me.readerSuccess,_me.readerFail);
     }, function(err){
@@ -151,10 +155,10 @@ FileUploadView.prototype.getFolderWithPath = function() {
 
 FileUploadView.prototype.getParentFolder = function() {
     var _me = this;
-    if (_me.localFileFullPath != 'file:///storage/sdcard0' && _me.localFileFullPath != 'file:///storage/sdcard') {
-        window.resolveLocalFileSystemURI(_me.localFileFullPath, function(dir) {
+    if (app.localFileFullPath != 'file:///storage/sdcard0' && app.localFileFullPath != 'file:///storage/sdcard') {
+        window.resolveLocalFileSystemURI(app.localFileFullPath, function(dir) {
             dir.getParent(function(parent) {
-                _me.localFileFullPath = parent.fullPath;
+                app.localFileFullPath = parent.fullPath;
                 var directoryReader = parent.createReader(); // this gives the wrong path when at file:///storage/sdcard
                 directoryReader.readEntries(_me.readerSuccess,_me.readerFail);
             }, function(err){
@@ -165,7 +169,7 @@ FileUploadView.prototype.getParentFolder = function() {
         });
     } else {
         window.resolveLocalFileSystemURI('file:///storage', function(dir) {
-            _me.localFileFullPath = dir.fullPath;
+            app.localFileFullPath = dir.fullPath;
             var directoryReader = dir.createReader();
             directoryReader.readEntries(_me.readerSuccess,_me.readerFail);
         }, function(err){

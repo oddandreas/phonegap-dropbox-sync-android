@@ -7,7 +7,9 @@ var app = (function() {
         dropboxView = new DropboxView(null, fileListTpl), // listFolder() needs available in window
         fileUploadViewTpl = Handlebars.compile($('#fileUploadView-tpl').html()),
         localFileListTpl = Handlebars.compile($('#localFileList-tpl').html()),
-        slider = new PageSlider($('body'));
+        slider = new PageSlider($('body')),
+        dropboxPath = '/',
+        localFileFullPath = '';
     
     var showWelcomeView = function() {
         var welcomeView = new WelcomeView(welcomeViewTpl);
@@ -25,7 +27,6 @@ var app = (function() {
         $('#text').css('max-width', w);
         loadIcon.css('left', '60px');
         
-        app.path = (app.path) ? app.path : '/';
         dropboxView.listFolder();
         dropbox.addObserver("/");
     };
@@ -36,7 +37,7 @@ var app = (function() {
         
         loadIcon.css('left', '70px');
         
-        if (fileUploadView.localFileFullPath == '') {
+        if (app.localFileFullPath == '') {
             // request the persistent file system
             window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, fileUploadView.getFSRoot, fileUploadView.FSfail);
         } else {
@@ -77,7 +78,8 @@ var app = (function() {
     };
     
     function showExitConfirm() {
-        window.confirm('Exit PhoneGap Sync?', 'Confirm Exit', ['Exit', 'Cancel'], function(buttonIndex) {
+        window.confirm('Exit PhoneGap Sync?', 'Confirm Exit', ['Exit', 'Cancel'], 
+        function(buttonIndex) {
             if (buttonIndex == 1) {
                 navigator.app.exitApp(); // close the app
             }
@@ -93,7 +95,8 @@ var app = (function() {
     }
 
     return {
-        path: '/',
+        dropboxPath: dropboxPath,
+        localFileFullPath: localFileFullPath,
         dropboxView: dropboxView,
         showWelcomeView: showWelcomeView,
         showFileUploadView: showFileUploadView,

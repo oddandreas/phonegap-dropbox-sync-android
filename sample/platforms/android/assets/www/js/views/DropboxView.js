@@ -16,7 +16,8 @@ var DropboxView = function (template, listTemplate) {
          });
         
         this.el.on("click", '#btn-unlink', function(event) {
-            window.confirm('Unlink from Dropbox?', 'Confirm Unlink', ['Yes', 'No'], function(buttonIndex) {
+            window.confirm('Unlink from Dropbox?', 'Confirm Unlink', ['Yes', 'No'], 
+            function(buttonIndex) {
                 if (buttonIndex == 1) {
                     app.showLoader();
                     dropbox.unlink().done(function() {
@@ -50,17 +51,20 @@ var DropboxView = function (template, listTemplate) {
         });
         
         this.el.on('click', '#btn-back', function(event) {
-            (app.path == '/') ? app.showExitConfirm() : window.history.back();
+            (app.dropboxPath == '/') ? app.showExitConfirm() : window.history.back();
             event.preventDefault();
         });
         
-        $(window).off('haschange').on('hashchange', function() {
-            app.path = decodeURIComponent(window.location.hash.substr(1));
-            $('#path').html(app.path ? app.path : '/');
+        window.onhashchange = function() {
+            app.dropboxPath = decodeURIComponent(window.location.hash.substr(1));
+            if (app.dropboxPath == '') {
+                app.dropboxPath = '/';
+            }
+            $('#path').html(app.dropboxPath);
             _me.listFolder();
-        });
+        };
         
-        $(window).off('orientationchange').on('orientationchange', function(event) {
+        window.onorientationchange = function(event) {
             setTimeout(function() {
                 var h = $('#content').height(),
                     w = $('#content').width();
@@ -79,7 +83,7 @@ var DropboxView = function (template, listTemplate) {
                     app.loadIcon.css('left', '60px');
                     break; 
             }
-        });
+        };
          
     }; // end initialize
 
@@ -100,7 +104,7 @@ DropboxView.prototype.listFolder = function() {
         fileArray = [],
         folderArray = [],
         _me = this;
-    dropbox.listFolder(app.path).done(function(files) {
+    dropbox.listFolder(app.dropboxPath).done(function(files) {
         l = files.length;
         (l > 0) ? $("#noFiles").hide() : $("#noFiles").show();
         for (i = 0; i < l; i++) {
@@ -118,7 +122,6 @@ DropboxView.prototype.listFolder = function() {
         var fileList = folderArray.concat(fileArray);
         html = _me.listTemplate(fileList);
         $("#fileList").html(html);
-        app.path = (app.path) ? app.path : '/';
-        $('#path').html(app.path);
+        $('#path').html(app.dropboxPath);
     });
 };
