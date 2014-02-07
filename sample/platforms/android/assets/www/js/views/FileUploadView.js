@@ -75,7 +75,8 @@ var FileUploadView = function (template, listTemplate) {
         
         window.onhashchange = null; // the notification dialog buttons can trigger a hashchange event, destroy the event listener
 
-        $(window).on('orientationchange', function (event) {
+        window.onorientationchange = null; // remove any current listeners
+        window.onorientationchange = function(event) {
             switch (window.orientation) {
                 case -90:
                 case 90:
@@ -87,7 +88,7 @@ var FileUploadView = function (template, listTemplate) {
                     app.loadIcon.css('left', '70px');
                     break;
             }
-        });
+        };
          
     }; // end initialize
 
