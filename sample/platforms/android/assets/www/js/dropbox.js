@@ -71,7 +71,7 @@ var dropbox = (function() {
         return deferred.promise();
     }
 
-    var readData = function (fileName) {
+    var readData = function(fileName) {
         var deferred = $.Deferred();
         Cordova.exec(
             function(result) {
@@ -84,7 +84,7 @@ var dropbox = (function() {
         return deferred.promise();
     }
 
-    var readString = function (fileName) {
+    var readString = function(fileName) {
         var deferred = $.Deferred();
         Cordova.exec(
             function(result) {
@@ -97,7 +97,7 @@ var dropbox = (function() {
         return deferred.promise();
     }
     
-    var uploadFile = function (filePath, dropboxPath) {
+    var uploadFile = function(filePath, dropboxPath) {
         var deferred = $.Deferred();
         Cordova.exec(
             function(result) {
@@ -110,7 +110,7 @@ var dropbox = (function() {
         return deferred.promise();
     }
     
-    var uploadFolder = function (folderPath, dropboxPath, doRecursive) {
+    var uploadFolder = function(folderPath, dropboxPath, doRecursive) {
         var deferred = $.Deferred();
         Cordova.exec(
             function(result) {
