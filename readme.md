@@ -21,25 +21,32 @@ List the Dropbox App's root folder:
 dropbox.listFolder('/').done(function(files) {
     // each object index in files have properties: path, modifiedTime, size, and isFolder
 }).fail(function() {
-    // call to listFolder method failed
+    
 });
 ```
 
 Upload a file to Dropbox:
 ```
-dropbox.uploadFile('file:///storage/sdcard0/DCIM/Camera/SomeVideo.mp4').done(function() {
-    // you pass a local URI to this method
+var localFileUri = "file:///storage/sdcard0/DCIM/Camera/SomeVideo.mp4";
+var dropboxFolderPath = "/someFolder/withinDropbox";
+
+dropbox.uploadFile(localFileUri, dropboxFolderPath).done(function() {
+    
 }).fail(function() {
-    // call to uploadFile method failed
+    
 });
 ```
 
-Upload a folder to Dropbox (grabs all subfolders & files):
+Upload a folder to Dropbox:
 ```
-dropbox.uploadFolder('file:///storage/sdcard0').done(function() {
-    // you pass a local URI to this method
+var localFileUri = "file:///storage/sdcard0";
+var dropboxFolderPath = "/someFolder/withinDropbox";
+var doRecursively = true;
+
+dropbox.uploadFolder(localFileUri, dropboxFolderPath, doRecursively).done(function() {
+    // you can optionally upload all subfolders & files by passing true in the 3rd parameter
 }).fail(function() {
-    // call to uploadFolder method failed
+    
 });
 ```
 
