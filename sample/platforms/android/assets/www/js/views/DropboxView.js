@@ -64,6 +64,7 @@ var DropboxView = function (template, listTemplate) {
             _me.listFolder();
         };
         
+        window.onorientationchange = null; // remove any current listeners
         window.onorientationchange = function(event) {
             setTimeout(function() {
                 var h = $('#content').height(),
