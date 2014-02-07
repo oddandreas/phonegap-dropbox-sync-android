@@ -28,7 +28,7 @@ dropbox.listFolder('/').done(function(files) {
 
 Upload a file to Dropbox:
 ```
-dropbox.uploadFile('file:///storage/sdcard0/DCIM/Camera/SomeVideo.mp4').done(function () {
+dropbox.uploadFile('file:///storage/sdcard0/DCIM/Camera/SomeVideo.mp4').done(function() {
     // call to uploadFile successful
     // you pass a local URI to this method
 }).fail(function() {
@@ -38,7 +38,7 @@ dropbox.uploadFile('file:///storage/sdcard0/DCIM/Camera/SomeVideo.mp4').done(fun
 
 Upload a folder to Dropbox (grabs all subfolders & files):
 ```
-dropbox.uploadFolder('file:///storage/sdcard0').done(function () {
+dropbox.uploadFolder('file:///storage/sdcard0').done(function() {
     // call to uploadFolder successful
     // you pass a local URI to this method
 }).fail(function() {
