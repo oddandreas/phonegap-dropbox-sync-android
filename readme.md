@@ -46,3 +46,4 @@ dropbox.uploadFolder(localFileUri, dropboxFolderPath, doRecursive).done(function
 ```
 
 __Note: This plugin requires jQuery 1.5+ for the Deferred Object.__
+ 
