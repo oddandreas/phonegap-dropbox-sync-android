@@ -31,7 +31,7 @@ var localFileUri = "file:///storage/sdcard0/DCIM/Camera/SomeVideo.mp4";
 var dropboxFolderPath = "/someFolder";
 
 dropbox.uploadFile(localFileUri, dropboxFolderPath).done(function() {
-    
+    // dropboxFolderPath is the Dropbox folder you want to upload the file into
 }).fail(function() {
     
 });
