@@ -186,4 +186,4 @@ FileUploadView.prototype.FSfail = function(err) {
         
 FileUploadView.prototype.readerFail = function(error) {
     alert("Failed to list directory contents: " + error.code);
-}; 
+};
