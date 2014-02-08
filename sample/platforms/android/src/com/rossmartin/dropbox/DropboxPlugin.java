@@ -79,13 +79,17 @@ public class DropboxPlugin extends CordovaPlugin {
         } else if (action.equals("uploadFile")) {
             String localPath = args.getString(0);
             String dropboxPath = args.getString(1);
-            dropboxPath = (dropboxPath.endsWith("/")) ? dropboxPath : dropboxPath + "/";
+            if (! dropboxPath.endsWith("/")) {
+                dropboxPath += "/";
+            }
             this.uploadFile(localPath, dropboxPath, callbackContext);
             return true;
         } else if (action.equals("uploadFolder")) {
             String localPath = args.getString(0);
             String dropboxPath = args.getString(1);
-            dropboxPath = (dropboxPath.endsWith("/")) ? dropboxPath : dropboxPath + "/";
+            if (! dropboxPath.endsWith("/")) {
+                dropboxPath += "/";
+            }
             boolean doRecursive = args.getBoolean(2);
             this.uploadFolder(localPath, dropboxPath, doRecursive, callbackContext);
             return true;
