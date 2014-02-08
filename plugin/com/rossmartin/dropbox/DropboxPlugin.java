@@ -78,18 +78,16 @@ public class DropboxPlugin extends CordovaPlugin {
             return true;
         } else if (action.equals("uploadFile")) {
             String localPath = args.getString(0);
-            String dropboxPath = args.getString(1) + "/";
+            String dropboxPath = args.getString(1);
+            dropboxPath = (dropboxPath.endsWith("/")) ? dropboxPath : dropboxPath + "/";
             this.uploadFile(localPath, dropboxPath, callbackContext);
             return true;
         } else if (action.equals("uploadFolder")) {
             String localPath = args.getString(0);
-            String dropboxPath = args.getString(1) + "/";
+            String dropboxPath = args.getString(1);
+            dropboxPath = (dropboxPath.endsWith("/")) ? dropboxPath : dropboxPath + "/";
             boolean doRecursive = args.getBoolean(2);
-            if (doRecursive) {
-                this.uploadFolderRecursive(localPath, dropboxPath, callbackContext);
-            } else {
-                this.uploadFolder(localPath, dropboxPath, callbackContext);
-            }
+            this.uploadFolder(localPath, dropboxPath, doRecursive, callbackContext);
             return true;
         }
         return false;
@@ -296,7 +294,7 @@ public class DropboxPlugin extends CordovaPlugin {
         });
     }
     
-    private void uploadFolder(final String localPath, final String dropboxPath,  final CallbackContext callbackContext) {
+    private void uploadFolder(final String localPath, final String dropboxPath, final boolean doRecursive, final CallbackContext callbackContext) {
         Log.v(TAG, "uploadFolder method executing");
         cordova.getThreadPool().execute(new Runnable() {
             public void run() {
@@ -306,63 +304,12 @@ public class DropboxPlugin extends CordovaPlugin {
                     dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
                     File uploadPath = resolveLocalFileSystemURI(localPath);
                     localFileList = new ArrayList<File>();
-                    directorySearch(uploadPath, false);
-                    Log.v(TAG, "uploadFolder after directorySearch method call, localFileList -> " + localFileList);
-                    numFilesToUpload = localFileList.size();
-                    for (File file : localFileList) {
-                        DbxFile dbxFile;
-                        String parentName = uploadPath.getName();
-                        int needle = file.getPath().indexOf(parentName);
-                        String fileUploadName = file.getPath().substring(needle);
-                        Log.v(TAG, "fileUploadName -> " + fileUploadName);
-                        DbxPath filePath = new DbxPath(dropboxPath + fileUploadName);
-                        if (dbxFs.exists(filePath)) {
-                            dbxFile = dbxFs.open(filePath);
-                        } else {
-                            dbxFile = dbxFs.create(filePath);
-                        }
-                        dbxFile.writeFromExistingFile(file, false);
-                        dbxFs.syncNowAndWait();
-                        dbxFile.addListener(new DbxFile.Listener() {
-                            @Override
-                            public void onFileChange(DbxFile file) {
-                                DbxFileStatus status;
-                                try {
-                                    status = file.getSyncStatus();
-                                    long sizeTransferred = status.bytesTransferred;
-                                    if (sizeTransferred == -1) { // transfer done
-                                        file.close();
-                                        numFilesToUpload--;
-                                        if (numFilesToUpload == 0) {
-                                            callbackContext.success();
-                                        }
-                                    }
-                                } catch (DbxException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        });
+                    if (doRecursive) {
+                        directorySearch(uploadPath, true);
+                    } else {
+                        directorySearch(uploadPath, false);
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    callbackContext.error(PLUGIN_ERROR);
-                }
-            }
-        });
-    }
-    
-    private void uploadFolderRecursive(final String localPath, final String dropboxPath, final CallbackContext callbackContext) {
-        Log.v(TAG, "uploadFolderRecursive method executing");
-        cordova.getThreadPool().execute(new Runnable() {
-            public void run() {
-                DbxFileSystem dbxFs;
-                
-                try {
-                    dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
-                    File uploadPath = resolveLocalFileSystemURI(localPath);
-                    localFileList = new ArrayList<File>();
-                    directorySearch(uploadPath, true);
-                    Log.v(TAG, "uploadFolderRecursive after directorySearch method call, localFileList -> " + localFileList);
+                    Log.v(TAG, "uploadFolder after directorySearch method call, localFileList -> " + localFileList + " \r\n\r\nRecursion: " + doRecursive);
                     numFilesToUpload = localFileList.size();
                     if (numFilesToUpload > 0) {
                         for (File file : localFileList) {
@@ -371,7 +318,6 @@ public class DropboxPlugin extends CordovaPlugin {
                             int needle = file.getPath().indexOf(parentName);
                             String fileUploadName = file.getPath().substring(needle);
                             Log.v(TAG, "fileUploadName -> " + fileUploadName);
-                            
                             if (file.isDirectory()) {
                                 DbxPath filePath = new DbxPath(dropboxPath + fileUploadName);
                                 if (!dbxFs.exists(filePath)) {
@@ -429,7 +375,7 @@ public class DropboxPlugin extends CordovaPlugin {
             }
         });
     }
-    
+        
     @SuppressWarnings("deprecation")
     private File resolveLocalFileSystemURI(String url) throws IOException, JSONException {
         String decoded = URLDecoder.decode(url, "UTF-8");
@@ -473,15 +419,14 @@ public class DropboxPlugin extends CordovaPlugin {
         try {
             File[] files = dir.listFiles();
             for (File file : files) {
+                localFileList.add(file);
                 if (file.isDirectory()) {
                     Log.v(TAG, "directory:" + file.getCanonicalPath());
                     if (recursive) {
-                        localFileList.add(file);
                         directorySearch(file, true);
                     }
                 } else {
                     Log.v(TAG, "file:" + file.getCanonicalPath());
-                    localFileList.add(file);
                 }
             }
         } catch (IOException e) {
