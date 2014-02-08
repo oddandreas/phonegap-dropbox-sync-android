@@ -475,8 +475,8 @@ public class DropboxPlugin extends CordovaPlugin {
             for (File file : files) {
                 if (file.isDirectory()) {
                     Log.v(TAG, "directory:" + file.getCanonicalPath());
+                    localFileList.add(file);
                     if (recursive) {
-                        localFileList.add(file);
                         directorySearch(file, true);
                     }
                 } else {
