@@ -288,11 +288,7 @@ public class DropboxPlugin extends CordovaPlugin {
                     dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
                     File uploadPath = resolveLocalFileSystemURI(localPath);
                     localFileList = new ArrayList<File>();
-                    if (doRecursive) {
-                        directorySearch(uploadPath, true);
-                    } else {
-                        directorySearch(uploadPath, false);
-                    }
+                    directorySearch(uploadPath, doRecursive);
                     Log.v(TAG, "uploadFolder after directorySearch method call, localFileList -> " + localFileList + " \r\n\r\nRecursion: " + doRecursive);
                     if (localFileList.size() > 0) {
                         for (File file : localFileList) {
