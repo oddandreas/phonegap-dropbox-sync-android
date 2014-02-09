@@ -18,13 +18,12 @@ var DropboxView = function (template, listTemplate) {
         this.el.on("click", '#btn-unlink', function(event) {
             window.confirm('Unlink from Dropbox?', 'Confirm Unlink', ['Yes', 'No'], 
             function(buttonIndex) {
-                if (buttonIndex == 1) {
-                    app.showLoader();
-                    dropbox.unlink().done(function() {
-                        app.hideLoader();
-                        app.showWelcomeView();
-                    });
-                }
+                if (buttonIndex == 2) return;
+                app.showLoader();
+                dropbox.unlink().done(function() {
+                    app.hideLoader();
+                    app.showWelcomeView();
+                });
             });
             event.preventDefault();
         });

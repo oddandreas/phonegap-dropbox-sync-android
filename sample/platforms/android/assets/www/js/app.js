@@ -80,9 +80,8 @@ var app = (function() {
     function showExitConfirm() {
         window.confirm('Exit PhoneGap Sync?', 'Confirm Exit', ['Exit', 'Cancel'], 
         function(buttonIndex) {
-            if (buttonIndex == 1) {
-                navigator.app.exitApp(); // close the app
-            }
+            if (buttonIndex == 2) return;
+            navigator.app.exitApp(); // close the app
         });
     }
     

@@ -22,34 +22,34 @@ var FileUploadView = function (template, listTemplate) {
             var fullPath = $(event.target).attr('fullPath'),
                 fileName = $(event.target).attr('fileName');
             if ($(event.target).hasClass('file')) {
-                window.confirm('Upload ' + fileName + ' to Dropbox?', 'Confirm File Upload', ['Yes', 'No'], 
-                function (buttonIndex) {
-                    if (buttonIndex == 1) {
-                        app.showLoader();
+                window.confirm('Upload ' + fileName + ' to ' + app.dropboxPath + ' in Dropbox?',
+                    'Confirm File Upload',
+                    ['Yes', 'No'],
+                    function (buttonIndex) {
+                        _me.isTapHolding = false;
+                        if (buttonIndex == 2) return;
                         dropbox.uploadFile(fullPath, app.dropboxPath).done(function(result) {
-                            app.hideLoader();
+                            // nothing to do, add here if needed
                         }).fail(function (err) {
                             console.log('dropbox.uploadFile fail, err -> ' + err);
-                            app.hideLoader();
                         });
                     }
-                    _me.isTapHolding = false;
-                });
+                );
             } else {
-                window.confirm('Upload ' + fileName + ' folder to Dropbox?', 'Confirm Folder Upload', ['Yes', 'Yes (Recursive)', 'Cancel'], 
-                function (buttonIndex) {
-                    if (buttonIndex == 1 || buttonIndex == 2) {
-                        app.showLoader();
+                window.confirm('Upload ' + fileName + ' folder to ' + app.dropboxPath + ' in Dropbox?',
+                    'Confirm Folder Upload',
+                    ['Yes', 'Yes (Recursive)', 'No'],
+                    function (buttonIndex) {
+                        _me.isTapHolding = false;
+                        if (buttonIndex == 3) return;
                         var doRecursive = (buttonIndex == 2) ? true : false;
                         dropbox.uploadFolder(fullPath, app.dropboxPath, doRecursive).done(function(result) {
-                            app.hideLoader();
+                            // nothing to do, add here if needed
                         }).fail(function (err) {
-                            console.log('dropbox.uploadFolder fail, err -> ' + err);
-                            app.hideLoader();
+                            console.log('dropbox.uploadFolder fail');
                         });
                     }
-                    _me.isTapHolding = false;
-                });
+                );
             }
             event.preventDefault();
         });

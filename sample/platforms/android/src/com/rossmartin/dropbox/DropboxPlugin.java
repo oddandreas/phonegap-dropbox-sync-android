@@ -45,7 +45,6 @@ public class DropboxPlugin extends CordovaPlugin {
     static final int REQUEST_LINK_TO_DBX = 1337;  // This value is up to you, it must be the same as in your main activity though
     private DbxAccountManager mDbxAcctMgr;
     private static List<File> localFileList;
-    private static int numFilesToUpload;
     
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
@@ -153,7 +152,6 @@ public class DropboxPlugin extends CordovaPlugin {
                 try {
                     dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
                     dbxFs.addPathListener(new DbxFileSystem.PathListener() {
-
                         @Override
                         public void onPathChange(DbxFileSystem arg0, DbxPath arg1, Mode arg2) {
                             webView.loadUrl("javascript:dropbox_fileChange();");
@@ -162,7 +160,6 @@ public class DropboxPlugin extends CordovaPlugin {
                     }, new DbxPath(path), Mode.PATH_OR_CHILD);
                     
                     dbxFs.addSyncStatusListener(new DbxFileSystem.SyncStatusListener() {
-                        
                         @Override
                         public void onSyncStatusChange(DbxFileSystem fs) {
                             try {
@@ -261,7 +258,6 @@ public class DropboxPlugin extends CordovaPlugin {
                 try {
                     dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
                     File uploadFile = resolveLocalFileSystemURI(localPath);
-                    //DbxPath filePath = new DbxPath(DbxPath.ROOT, uploadFile.getName());
                     Log.v(TAG, "dropboxPath + uploadFile.getName() -> " + dropboxPath + uploadFile.getName());
                     DbxPath filePath = new DbxPath(dropboxPath + uploadFile.getName());
                     DbxFile dbxFile;
@@ -272,24 +268,8 @@ public class DropboxPlugin extends CordovaPlugin {
                     }
                     dbxFile.writeFromExistingFile(uploadFile, false);
                     dbxFs.syncNowAndWait();
-                    dbxFile.addListener(new DbxFile.Listener() {
-                        @Override
-                        public void onFileChange(DbxFile file) {
-                            Log.v(TAG, "onFileChange is firing");
-                            DbxFileStatus status;
-                            try {
-                                status = file.getSyncStatus();
-                                long sizeTransferred = status.bytesTransferred;
-                                Log.v(TAG, "upload, sizeTransferred -> " + sizeTransferred);
-                                if (sizeTransferred == -1) { // transfer done
-                                    file.close();
-                                    callbackContext.success();
-                                }
-                            } catch (DbxException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    });
+                    dbxFile.close();
+                    callbackContext.success();
                 } catch (Exception e) {
                     e.printStackTrace();
                     callbackContext.error(PLUGIN_ERROR);
@@ -314,8 +294,7 @@ public class DropboxPlugin extends CordovaPlugin {
                         directorySearch(uploadPath, false);
                     }
                     Log.v(TAG, "uploadFolder after directorySearch method call, localFileList -> " + localFileList + " \r\n\r\nRecursion: " + doRecursive);
-                    numFilesToUpload = localFileList.size();
-                    if (numFilesToUpload > 0) {
+                    if (localFileList.size() > 0) {
                         for (File file : localFileList) {
                             DbxFile dbxFile;
                             String parentName = uploadPath.getName();
@@ -328,10 +307,6 @@ public class DropboxPlugin extends CordovaPlugin {
                                     Log.v(TAG, "Creating new directory in Dropbox, directory name -> " + fileUploadName);
                                     dbxFs.createFolder(filePath);
                                 }
-                                numFilesToUpload--;
-                                if (numFilesToUpload == 0) {
-                                    callbackContext.success();
-                                }
                             } else {
                                 DbxPath filePath = new DbxPath(dropboxPath + fileUploadName);
                                 if (dbxFs.exists(filePath)) {
@@ -341,25 +316,7 @@ public class DropboxPlugin extends CordovaPlugin {
                                 }
                                 dbxFile.writeFromExistingFile(file, false);
                                 dbxFs.syncNowAndWait();
-                                dbxFile.addListener(new DbxFile.Listener() {
-                                    @Override
-                                    public void onFileChange(DbxFile file) {
-                                        DbxFileStatus status;
-                                        try {
-                                            status = file.getSyncStatus();
-                                            long sizeTransferred = status.bytesTransferred;
-                                            if (sizeTransferred == -1) { // transfer done
-                                                file.close();
-                                                numFilesToUpload--;
-                                                if (numFilesToUpload == 0) {
-                                                    callbackContext.success();
-                                                }
-                                            }
-                                        } catch (DbxException e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                });
+                                dbxFile.close();
                             }
                         }
                     } else { // just an empty directory to make
@@ -368,10 +325,10 @@ public class DropboxPlugin extends CordovaPlugin {
                             if (!dbxFs.exists(filePath)) {
                                 Log.v(TAG, "Creating new directory in Dropbox, directory name -> " + uploadPath.getName());
                                 dbxFs.createFolder(filePath);
-                                callbackContext.success();
                             }
                         } 
                     }
+                    callbackContext.success();
                 } catch (Exception e) {
                     e.printStackTrace();
                     callbackContext.error(PLUGIN_ERROR);
