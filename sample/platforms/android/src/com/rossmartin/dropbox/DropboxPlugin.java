@@ -25,7 +25,6 @@ import com.dropbox.sync.android.DbxAccountManager;
 import com.dropbox.sync.android.DbxException;
 import com.dropbox.sync.android.DbxException.Unauthorized;
 import com.dropbox.sync.android.DbxFileInfo;
-import com.dropbox.sync.android.DbxFileStatus;
 import com.dropbox.sync.android.DbxFileSystem;
 import com.dropbox.sync.android.DbxPath;
 import com.dropbox.sync.android.DbxFileSystem.PathListener.Mode;
@@ -44,36 +43,35 @@ public class DropboxPlugin extends CordovaPlugin {
     private static final String APP_SECRET = "f9cwicck72tuhpx"; // Your app secret here
     static final int REQUEST_LINK_TO_DBX = 1337;  // This value is up to you, it must be the same as in your main activity though
     private DbxAccountManager mDbxAcctMgr;
-    private static List<File> localFileList;
     
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         Log.v(TAG, "execute method starting");
         mDbxAcctMgr = DbxAccountManager.getInstance(cordova.getActivity().getApplicationContext(), APP_KEY, APP_SECRET);
         if (action.equals("checkLink")) {
-            this.checkLink(callbackContext);
+            checkLink(callbackContext);
             return true;
         } else if (action.equals("link")) {
-            this.link(callbackContext);
+            link(callbackContext);
             return true;
         } else if (action.equals("unlink")) {
-            this.unlink(callbackContext);
+            unlink(callbackContext);
             return true;
         } else if (action.equals("listFolder")) {
             String path = args.getString(0);
-            this.listFolder(path, callbackContext);
+            listFolder(path, callbackContext);
             return true;
         } else if (action.equals("addObserver")) {
             String path = args.getString(0);
-            this.addObserver(path, callbackContext);
+            addObserver(path, callbackContext);
             return true;
         } else if (action.equals("readData")) {
             String path = args.getString(0);
-            this.readData(path, callbackContext);
+            readData(path, callbackContext);
             return true;
         } else if (action.equals("readString")) {
             String path = args.getString(0);
-            this.readString(path, callbackContext);
+            readString(path, callbackContext);
             return true;
         } else if (action.equals("uploadFile")) {
             String localPath = args.getString(0);
@@ -81,7 +79,7 @@ public class DropboxPlugin extends CordovaPlugin {
             if (! dropboxPath.endsWith("/")) {
                 dropboxPath += "/";
             }
-            this.uploadFile(localPath, dropboxPath, callbackContext);
+            uploadFile(localPath, dropboxPath, callbackContext);
             return true;
         } else if (action.equals("uploadFolder")) {
             String localPath = args.getString(0);
@@ -90,7 +88,7 @@ public class DropboxPlugin extends CordovaPlugin {
                 dropboxPath += "/";
             }
             boolean doRecursive = args.getBoolean(2);
-            this.uploadFolder(localPath, dropboxPath, doRecursive, callbackContext);
+            uploadFolder(localPath, dropboxPath, doRecursive, callbackContext);
             return true;
         }
         return false;
@@ -283,12 +281,12 @@ public class DropboxPlugin extends CordovaPlugin {
         cordova.getThreadPool().execute(new Runnable() {
             public void run() {
                 DbxFileSystem dbxFs;
+                List<File> localFileList = new ArrayList<File>();
                 
                 try {
                     dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
                     File uploadPath = resolveLocalFileSystemURI(localPath);
-                    localFileList = new ArrayList<File>();
-                    directorySearch(uploadPath, doRecursive);
+                    directorySearch(uploadPath, localFileList, doRecursive);
                     Log.v(TAG, "uploadFolder after directorySearch method call, localFileList -> " + localFileList + " \r\n\r\nRecursion: " + doRecursive);
                     if (localFileList.size() > 0) {
                         for (File file : localFileList) {
@@ -372,7 +370,7 @@ public class DropboxPlugin extends CordovaPlugin {
         return fp;
     }
     
-    private static void directorySearch(File dir, boolean recursive) {
+    private static void directorySearch(File dir, List<File> localFileList, boolean recursive) {
         try {
             File[] files = dir.listFiles();
             for (File file : files) {
@@ -380,7 +378,7 @@ public class DropboxPlugin extends CordovaPlugin {
                 if (file.isDirectory()) {
                     Log.v(TAG, "directory:" + file.getCanonicalPath());
                     if (recursive) {
-                        directorySearch(file, true);
+                        directorySearch(file, localFileList, true);
                     }
                 } else {
                     Log.v(TAG, "file:" + file.getCanonicalPath());
