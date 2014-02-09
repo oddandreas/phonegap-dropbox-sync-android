@@ -27,12 +27,13 @@ var FileUploadView = function (template, listTemplate) {
                     ['Yes', 'No'],
                     function (buttonIndex) {
                         _me.isTapHolding = false;
-                        if (buttonIndex == 2) return;
-                        dropbox.uploadFile(fullPath, app.dropboxPath).done(function(result) {
-                            // nothing to do, add here if needed
-                        }).fail(function (err) {
-                            console.log('dropbox.uploadFile fail, err -> ' + err);
-                        });
+                        if (buttonIndex == 1) {
+                            dropbox.uploadFile(fullPath, app.dropboxPath).done(function(result) {
+                                // nothing to do, add here if needed
+                            }).fail(function (err) {
+                                console.log('dropbox.uploadFile fail, err -> ' + err);
+                            });
+                        }
                     }
                 );
             } else {
@@ -41,13 +42,14 @@ var FileUploadView = function (template, listTemplate) {
                     ['Yes', 'Yes (Recursive)', 'No'],
                     function (buttonIndex) {
                         _me.isTapHolding = false;
-                        if (buttonIndex == 3) return;
-                        var doRecursive = (buttonIndex == 2) ? true : false;
-                        dropbox.uploadFolder(fullPath, app.dropboxPath, doRecursive).done(function(result) {
-                            // nothing to do, add here if needed
-                        }).fail(function (err) {
-                            console.log('dropbox.uploadFolder fail');
-                        });
+                        if (buttonIndex == 1 || buttonIndex == 2) {
+                            var doRecursive = (buttonIndex == 2) ? true : false;
+                            dropbox.uploadFolder(fullPath, app.dropboxPath, doRecursive).done(function(result) {
+                                // nothing to do, add here if needed
+                            }).fail(function (err) {
+                                console.log('dropbox.uploadFolder fail');
+                            });
+                        }
                     }
                 );
             }
@@ -62,11 +64,11 @@ var FileUploadView = function (template, listTemplate) {
         this.el.on('click', '#btn-back', function(event) {
             if (app.localFileFullPath == 'file:///') { // if we're at root
                 window.confirm('Go back to Dropbox list?', 'Show Dropbox', ['Yes', 'No'], 
-                function(buttonIndex) {
-                    if (buttonIndex == 1) {
+                    function(buttonIndex) {
+                        if (buttonIndex == 2) return;
                         app.showDropboxView();
                     }
-                });
+                );
             } else {
                 _me.getParentFolder();
             }
