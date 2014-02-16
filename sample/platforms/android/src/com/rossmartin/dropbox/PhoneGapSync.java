@@ -56,4 +56,3 @@ public class PhoneGapSync extends CordovaActivity
         }
     }
 }
-
