@@ -11,7 +11,10 @@ var FileUploadView = function (template, listTemplate) {
         this.el = $('<div/>');
 
         this.el.on('click', '#localFileList .folder', function(event) {
-            if (_me.isTapHolding) return;
+            if (_me.isTapHolding) {
+                event.preventDefault();
+                return;
+            }
             app.localFileFullPath = $(this).attr('fullPath');
             _me.getFolderWithPath();
             event.preventDefault();
@@ -65,8 +68,9 @@ var FileUploadView = function (template, listTemplate) {
             if (app.localFileFullPath == 'file:///') { // if we're at root
                 window.confirm('Go back to Dropbox list?', 'Show Dropbox', ['Yes', 'No'], 
                     function(buttonIndex) {
-                        if (buttonIndex == 2) return;
-                        app.showDropboxView();
+                        if (buttonIndex == 1) {
+                            app.showDropboxView();
+                        }
                     }
                 );
             } else {
@@ -125,7 +129,8 @@ FileUploadView.prototype.appendToLocalFileList = function(entries) {
         html = '',
         file,
         fileArray = [],
-        folderArray = [];
+        folderArray = [],
+        _me = this;
     if (fileCount > 0) {
         for (var i = 0; i < fileCount; i++) {
             file = entries[i];
@@ -142,8 +147,37 @@ FileUploadView.prototype.appendToLocalFileList = function(entries) {
     } else {
         html = this.listTemplate();
     }
-    $('#localFileList').html(html);
     $('#localPath').text( (app.localFileFullPath != '') ? app.localFileFullPath : 'file:///storage' );
+    $('#localFileList').html(html);
+    if (app.fileUploadViewIScroll) {
+        app.fileUploadViewIScroll.destroy();
+    }
+    setTimeout(function() {
+        app.fileUploadViewIScroll = new IScroll($('#localFileListScroller', _me.el)[0], {
+            scrollbars: true,
+            fadeScrollbars: true,
+            shrinkScrollbars: 'clip',
+            disableMouse: true,
+            disablePointer: true
+        });
+        app.fileUploadViewIScroll.on('scrollEnd', _me.handleIScroll);
+        var checkIndex = app.fileUploadViewScrollCache.contains('path', app.localFileFullPath);
+        if (checkIndex != -1) {
+            app.fileUploadViewIScroll.scrollTo(0, app.fileUploadViewScrollCache[checkIndex].pos);
+        }
+    }, 10);
+};
+
+FileUploadView.prototype.handleIScroll = function() {
+    var checkIndex = app.fileUploadViewScrollCache.contains('path', app.localFileFullPath);
+    if (checkIndex == -1) {
+        app.fileUploadViewScrollCache.push({
+            path: app.localFileFullPath,
+            pos: this.y
+        });
+    } else {
+        app.fileUploadViewScrollCache[checkIndex].pos = this.y;
+    }
 };
 
 FileUploadView.prototype.getFolderWithPath = function() {

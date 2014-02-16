@@ -122,7 +122,36 @@ DropboxView.prototype.listFolder = function() {
         fileArray.sortByKey('path');
         var fileList = folderArray.concat(fileArray);
         html = _me.listTemplate(fileList);
-        $("#fileList").html(html);
         $('#path').html(app.dropboxPath);
+        $("#fileList").html(html);
+        if (app.dropboxViewIScroll) {
+            app.dropboxViewIScroll.destroy();
+        }
+        setTimeout(function() {
+            app.dropboxViewIScroll = new IScroll($('#scroller', _me.el)[0], {
+                scrollbars: true,
+                fadeScrollbars: true,
+                shrinkScrollbars: 'clip',
+                disableMouse: true,
+                disablePointer: true
+            });
+            app.dropboxViewIScroll.on('scrollEnd', _me.handleIScroll);
+            var checkIndex = app.dropboxViewScrollCache.contains('path', app.dropboxPath);
+            if (checkIndex != -1) {
+                app.dropboxViewIScroll.scrollTo(0, app.dropboxViewScrollCache[checkIndex].pos);
+            }
+        }, 10);
     });
+};
+
+DropboxView.prototype.handleIScroll = function() {
+    var checkIndex = app.dropboxViewScrollCache.contains('path', app.dropboxPath);
+    if (checkIndex == -1) {
+        app.dropboxViewScrollCache.push({
+            path: app.dropboxPath,
+            pos: this.y
+        });
+    } else {
+        app.dropboxViewScrollCache[checkIndex].pos = this.y;
+    }
 };

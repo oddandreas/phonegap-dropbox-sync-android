@@ -46,7 +46,7 @@ public class PhoneGapSync extends CordovaActivity
         if (requestCode == REQUEST_LINK_TO_DBX) {
             if (resultCode == Activity.RESULT_OK) {
                 // ... You can now start using Dropbox Sync API.
-                super.loadUrl("javascript:dropbox_linked();");
+                super.sendJavascript("dropbox_linked();");
             } else {
                 // ... Link failed or was cancelled by the user.
                 Log.v(TAG, "Dropbox link failed or was cancelled by the user.");

@@ -9,6 +9,12 @@ a {
     /*-webkit-tap-highlight-color: rgb(0, 0, 0);*/
 }
 
+/** iscroll **/
+* {
+	-webkit-box-sizing: border-box;
+}
+/** **/
+
 .topcoat-icon--unlink {
     background: url("../topcoat/img/unlock.svg") no-repeat;
     -webkit-background-size: cover;
@@ -39,15 +45,18 @@ ul {
     bottom: 0px;
     left: 0px;
     width: 300px;
+    margin-top:28px;
+    /** not needed anymore b/c of iscroll, causes issues
     overflow: auto;
     -webkit-overflow-scrolling: touch;
-    padding-right: 6px; /* needed for webkit scrollbar */
-    margin-top:28px;
+    **/
+    /* need for iscroll */
+    z-index: 1;
+    overflow: hidden;
 }
 
 #localFileListScroller {
     width: 100%;
-    padding-right: 0px; /* scrollbar is handled correctly with 100% width */
 }
 
 #content {
@@ -67,6 +76,13 @@ ul {
     padding: 0px;
     margin: 0px;
     overflow: hidden;
+    /* need for iscroll */
+    z-index: 1;
+    /*-webkit-tap-highlight-color: rgba(0,0,0,0);*/
+	-webkit-transform: translateZ(0);
+	/*-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-webkit-text-size-adjust: none;*/
 }
 
 #fileList li, #localFileList li {
@@ -150,11 +166,7 @@ ul {
     text-align: left;
 }
 
-::-webkit-scrollbar {
-    width: 6px;
-}
-
-::-webkit-scrollbar-thumb {
-    border-radius: 4px;
-    background: #a1a0a1;
+.iScrollIndicator {
+    background: #a1a0a1 !important;
+    width: 5px !important;
 }

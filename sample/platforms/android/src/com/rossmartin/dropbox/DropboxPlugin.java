@@ -152,7 +152,7 @@ public class DropboxPlugin extends CordovaPlugin {
                     dbxFs.addPathListener(new DbxFileSystem.PathListener() {
                         @Override
                         public void onPathChange(DbxFileSystem arg0, DbxPath arg1, Mode arg2) {
-                            webView.loadUrl("javascript:dropbox_fileChange();");
+                            webView.sendJavascript("dropbox_fileChange();");
                         }
                         
                     }, new DbxPath(path), Mode.PATH_OR_CHILD);
@@ -163,9 +163,9 @@ public class DropboxPlugin extends CordovaPlugin {
                             try {
                                 DbxSyncStatus dbSyncStatus = fs.getSyncStatus();
                                 if (! dbSyncStatus.anyInProgress()) {
-                                    webView.loadUrl("javascript:dropbox_onSyncStatusChange('none');");
+                                    webView.sendJavascript("dropbox_onSyncStatusChange('none');");
                                 } else {
-                                    webView.loadUrl("javascript:dropbox_onSyncStatusChange('sync');");
+                                    webView.sendJavascript("dropbox_onSyncStatusChange('sync');");
                                 }
                             } catch (DbxException e) {
                                 e.printStackTrace();

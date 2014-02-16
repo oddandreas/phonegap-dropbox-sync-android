@@ -1,24 +1,30 @@
 var app = (function() {
 
     var loadIcon = $('#loader'),
+        viewContainer = $('#viewContainer'),
         welcomeViewTpl = Handlebars.compile($('#welcomeView-tpl').html()),
         dropboxViewTpl = Handlebars.compile($('#dropboxView-tpl').html()),
         fileListTpl = Handlebars.compile($('#fileList-tpl').html()),
         dropboxView = new DropboxView(null, fileListTpl), // listFolder() needs available in window
         fileUploadViewTpl = Handlebars.compile($('#fileUploadView-tpl').html()),
         localFileListTpl = Handlebars.compile($('#localFileList-tpl').html()),
-        slider = new PageSlider($('body')),
+        slider = new PageSlider(viewContainer),
         dropboxPath = '/',
-        localFileFullPath = '';
+        localFileFullPath = '',
+        dropboxViewIScroll,
+        fileUploadViewIScroll;
     
     var showWelcomeView = function() {
         var welcomeView = new WelcomeView(welcomeViewTpl);
+        viewContainer.empty();
         slider.slidePageFrom(welcomeView.render().el, 'left');
     };
 
     var showDropboxView = function() {
         dropboxView = new DropboxView(dropboxViewTpl, fileListTpl);
-        slider.slidePageFrom(dropboxView.render().el, ($('#fileUploadView').length > 0) ? 'left' : 'right');
+        var fromFileUploadView = $('#fileUploadView').length > 0;
+        viewContainer.empty();
+        slider.slidePageFrom(dropboxView.render().el, (fromFileUploadView) ? 'left' : 'right');
         
         var h = $('#content').height(),
             w = $('#content').width();
@@ -33,6 +39,7 @@ var app = (function() {
     
     var showFileUploadView = function() {
         var fileUploadView = new FileUploadView(fileUploadViewTpl, localFileListTpl);
+        viewContainer.empty();
         slider.slidePageFrom(fileUploadView.render().el, 'right');
         
         loadIcon.css('left', '70px');
@@ -77,6 +84,15 @@ var app = (function() {
         });
     };
     
+    Array.prototype.contains = function(key, value) {
+        for (var i = 0; i < this.length; i++) {
+            if (this[i][key] == value) {
+                return i;
+            }
+        }
+        return -1;
+    };
+    
     function showExitConfirm() {
         window.confirm('Exit PhoneGap Sync?', 'Confirm Exit', ['Exit', 'Cancel'], 
             function(buttonIndex) {
@@ -98,6 +114,10 @@ var app = (function() {
     return {
         dropboxPath: dropboxPath,
         localFileFullPath: localFileFullPath,
+        dropboxViewScrollCache: [],
+        fileUploadViewScrollCache: [],
+        dropboxViewIScroll: dropboxViewIScroll,
+        fileUploadViewIScroll: fileUploadViewIScroll,
         dropboxView: dropboxView,
         showWelcomeView: showWelcomeView,
         showFileUploadView: showFileUploadView,

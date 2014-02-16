@@ -44,17 +44,20 @@ function PageSlider(container) {
         // Position the page at the starting position of the animation
         page.attr("class", "page " + from);
 
-        currentPage.one('webkitTransitionEnd', function(e) {
+        // I experienced situations where webkitTransitionEnd wouldn't trigger and an extra view would get left in the DOM
+        // I am manually removing the views from the appViewContainer div by using jQuery's .empty() method
+        
+        /*currentPage.one('webkitTransitionEnd', function(e) {
             $(e.target).remove();
-        });
+        });*/
 
         // Force reflow. More information here: http://www.phpied.com/rendering-repaint-reflowrelayout-restyle/
         container[0].offsetWidth;
 
         // Position the new page and the current page at the ending position of their animation with a transition class indicating the duration of the animation
         page.attr("class", "page transition center");
-        currentPage.attr("class", "page transition " + (from === "left" ? "right" : "left"));
-        currentPage = page;
+        //currentPage.attr("class", "page transition " + (from === "left" ? "right" : "left"));
+        //currentPage = page;
     }
 
 }

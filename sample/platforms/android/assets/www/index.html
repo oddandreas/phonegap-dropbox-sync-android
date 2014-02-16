@@ -10,6 +10,8 @@
 
 <body>
 
+   <div id="viewContainer"></div> <!-- views are inserted here, only 1 is in at a time -->
+   
    <script id="welcomeView-tpl" type="text/x-handlebars-template">
         <div id="theTopcoatNavBar" class="topcoat-navigation-bar">
             <div class="topcoat-navigation-bar__item left quarter">
@@ -142,20 +144,21 @@
         {{/each}}
     </script>
 
-<div id="loader"><img src="img/AjaxLoader.gif" /></div>
+    <div id="loader"><img src="img/AjaxLoader.gif" /></div>
 
-<script type="text/javascript" src="cordova.js"></script>
-<script type="text/javascript" src="lib/jquery-2.0.3.min.js"></script>
-<script type="text/javascript" src="lib/fastclick.js"></script>
-<script type="text/javascript" src="lib/handlebars.js"></script>
-<script type="text/javascript" src="lib/pageslider.js"></script>
-<script type="text/javascript" src="lib/jquery.tapandhold.js"></script>
-<script type="text/javascript" src="lib/encoder.js"></script>
-<script type="text/javascript" src="js/dropbox.js"></script>
-<script type="text/javascript" src="js/views/WelcomeView.js"></script>
-<script type="text/javascript" src="js/views/DropboxView.js"></script>
-<script type="text/javascript" src="js/views/FileUploadView.js"></script>
-<script type="text/javascript" src="js/app.js"></script>
+    <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="lib/jquery-2.1.0.min.js"></script>
+    <script type="text/javascript" src="lib/fastclick.js"></script>
+    <script type="text/javascript" src="lib/handlebars.js"></script>
+    <script type="text/javascript" src="lib/jquery.tapandhold.js"></script>
+    <script type="text/javascript" src="lib/encoder.js"></script>
+    <script type="text/javascript" src="lib/iscroll.js"></script>
+    <script type="text/javascript" src="lib/pageslider.js"></script>
+    <script type="text/javascript" src="js/dropbox.js"></script>
+    <script type="text/javascript" src="js/views/WelcomeView.js"></script>
+    <script type="text/javascript" src="js/views/DropboxView.js"></script>
+    <script type="text/javascript" src="js/views/FileUploadView.js"></script>
+    <script type="text/javascript" src="js/app.js"></script>
 
 </body>
 </html>
