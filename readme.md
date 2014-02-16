@@ -4,10 +4,6 @@ A PhoneGap plugin for the [Dropbox Sync API](https://www.dropbox.com/developers/
 
 Read my blog post [here](http://rossmartindev.blogspot.com/2013/08/phonegap-plugin-for-dropbox-sync-api.html)
 
-***```Update 1-14-14```***<br>**- The sample app is now using handlebars.js, fastclick.js, and pageslider.js**<br>
-**- Only 1 view is in the DOM at a time now, this improved performance a lot**<br>
-**- The sample app requires API 19 (Android 4.4.2) SDK to build and run.  This is a result of upgrading to PhoneGap 3.3.1**
-
 Sample Usage:
 -----------
 Link to Dropbox:
@@ -47,3 +43,9 @@ dropbox.uploadFolder(localFileUri, dropboxFolderPath, doRecursive).done(function
 
 __Note: This plugin requires jQuery 1.5+ for the Deferred Object.__
  
+ 
+ ***```Update 1-14-14```***<br>**- The sample app is now using handlebars.js, fastclick.js, and pageslider.js**<br>
+**- Only 1 view is in the DOM at a time now, this improved performance a lot**<br>
+**- The sample app requires API 19 (Android 4.4.2) SDK to build and run.  This is a result of upgrading to PhoneGap 3.3.1**
+
+***```Update 2-15-14```***<br>**- Added iScroll 5 and a scroll caching feature to the sample app.**
