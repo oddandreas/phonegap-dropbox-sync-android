@@ -156,7 +156,8 @@ FileUploadView.prototype.appendToLocalFileList = function(entries) {
         app.fileUploadViewIScroll = new IScroll($('#localFileListScroller', _me.el)[0], {
             scrollbars: true,
             fadeScrollbars: true,
-            shrinkScrollbars: 'clip'
+            shrinkScrollbars: 'clip',
+            click: true
         });
         app.fileUploadViewIScroll.on('scrollEnd', _me.handleIScroll);
         var checkIndex = app.fileUploadViewScrollCache.contains('path', app.localFileFullPath);
