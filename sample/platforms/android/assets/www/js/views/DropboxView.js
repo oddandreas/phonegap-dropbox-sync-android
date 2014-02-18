@@ -131,9 +131,7 @@ DropboxView.prototype.listFolder = function() {
             app.dropboxViewIScroll = new IScroll($('#scroller', _me.el)[0], {
                 scrollbars: true,
                 fadeScrollbars: true,
-                shrinkScrollbars: 'clip',
-                disableMouse: true,
-                disablePointer: true
+                shrinkScrollbars: 'clip'
             });
             app.dropboxViewIScroll.on('scrollEnd', _me.handleIScroll);
             var checkIndex = app.dropboxViewScrollCache.contains('path', app.dropboxPath);
