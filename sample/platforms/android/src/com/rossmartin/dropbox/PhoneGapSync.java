@@ -39,6 +39,11 @@ public class PhoneGapSync extends CordovaActivity
         // Set by <content src="index.html" /> in config.xml
         super.loadUrl(Config.getStartUrl());
         //super.loadUrl("file:///android_asset/www/index.html")
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+            // viewport hack needed for KitKat and maybe future versions
+            super.appView.getSettings().setLoadWithOverviewMode(true);
+            super.appView.getSettings().setUseWideViewPort(true);
+       }
     }
     
     @Override
