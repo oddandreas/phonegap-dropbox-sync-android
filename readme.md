@@ -49,3 +49,5 @@ __Note: This plugin requires jQuery 1.5+ for the Deferred Object.__
 **- The sample app requires API 19 (Android 4.4.2) SDK to build and run.  This is a result of upgrading to PhoneGap 3.3.1**
 
 ***```Update 2-15-14```***<br>**- Added iScroll 5 and a scroll caching feature to the sample app.**
+
+***```Update 2-24-14```***<br>**- Updated sample app to PhoneGap 3.4.0 and added pull to refresh feature on Dropbox list.**
