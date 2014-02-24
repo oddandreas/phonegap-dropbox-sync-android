@@ -74,6 +74,11 @@ var app = (function() {
             $('#btn-back').trigger('click');
             event.preventDefault();
         }
+        // viewport hack needed for Android KitKat, maybe future versions too
+        if (device.platform == 'Android' && parseFloat(device.version) >= parseFloat('4.4')) {
+            var viewPortScale = 1 / window.devicePixelRatio;
+            $('meta[name="viewport"]')[0].content = 'user-scalable=no, initial-scale='+viewPortScale+', width=device-width, height=device-height';
+        }
     });
     
     Array.prototype.sortByKey = function(key) {

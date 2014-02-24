@@ -6,7 +6,7 @@ var DropboxView = function (template, listTemplate) {
         
         if (! template) return; // making instance just for listFolder method
         
-        var _me = this;
+        var me = this;
         
         this.el = $('<div/>');
 
@@ -61,7 +61,7 @@ var DropboxView = function (template, listTemplate) {
                 app.dropboxPath = '/';
             }
             $('#path').html(app.dropboxPath);
-            _me.listFolder();
+            me.listFolder();
         };
         
         window.onorientationchange = null; // remove any current listeners
@@ -72,18 +72,6 @@ var DropboxView = function (template, listTemplate) {
                 $('#image').css({'max-width':w, 'max-height':h});
                 $('#text').css('max-width', w);
             }, 300);
-
-            switch(window.orientation) {
-                case -90:
-                case 90:
-                    // landscape
-                    app.loadIcon.css('left', '90px');
-                    break;
-                default:
-                    //portrait
-                    app.loadIcon.css('left', '60px');
-                    break; 
-            }
         };
          
     }; // end initialize
@@ -104,7 +92,7 @@ DropboxView.prototype.listFolder = function() {
         file,
         fileArray = [],
         folderArray = [],
-        _me = this;
+        me = this;
     dropbox.listFolder(app.dropboxPath).done(function(files) {
         l = files.length;
         (l > 0) ? $("#noFiles").hide() : $("#noFiles").show();
@@ -121,20 +109,32 @@ DropboxView.prototype.listFolder = function() {
         folderArray.sortByKey('path');
         fileArray.sortByKey('path');
         var fileList = folderArray.concat(fileArray);
-        html = _me.listTemplate(fileList);
+        html = me.listTemplate(fileList);
         $('#path').html(app.dropboxPath);
         $("#fileList").html(html);
         if (app.dropboxViewIScroll) {
             app.dropboxViewIScroll.destroy();
         }
         setTimeout(function() {
-            app.dropboxViewIScroll = new IScroll($('#scroller', _me.el)[0], {
+            app.dropboxViewIScroll = new IScroll($('#scroller', me.el)[0], {
                 scrollbars: true,
                 fadeScrollbars: true,
                 shrinkScrollbars: 'clip',
                 click: true
             });
-            app.dropboxViewIScroll.on('scrollEnd', _me.handleIScroll);
+            $('#scroller', me.el).pullToRefresh({
+                callback: function () {
+                    var deferred = $.Deferred();
+                    
+                    setTimeout(function () {
+                        deferred.resolve();
+                        me.listFolder();
+                    }, 2000);
+
+                    return deferred.promise();
+                }
+            }, app.dropboxViewIScroll);
+            app.dropboxViewIScroll.on('scrollEnd', me.onIScrollEnd);
             var checkIndex = app.dropboxViewScrollCache.contains('path', app.dropboxPath);
             if (checkIndex != -1) {
                 app.dropboxViewIScroll.scrollTo(0, app.dropboxViewScrollCache[checkIndex].pos);
@@ -143,7 +143,7 @@ DropboxView.prototype.listFolder = function() {
     });
 };
 
-DropboxView.prototype.handleIScroll = function() {
+DropboxView.prototype.onIScrollEnd = function() {
     var checkIndex = app.dropboxViewScrollCache.contains('path', app.dropboxPath);
     if (checkIndex == -1) {
         app.dropboxViewScrollCache.push({

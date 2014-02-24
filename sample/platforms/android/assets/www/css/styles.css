@@ -41,11 +41,10 @@ ul {
 
 #scroller, #localFileListScroller {
     position: absolute;
-    top: 64px;
+    top: 92px;
     bottom: 0px;
     left: 0px;
     width: 300px;
-    margin-top:28px;
     /** not needed anymore b/c of iscroll, causes issues
     overflow: auto;
     -webkit-overflow-scrolling: touch;
@@ -83,6 +82,10 @@ ul {
 	/*-webkit-touch-callout: none;
 	-webkit-user-select: none;
 	-webkit-text-size-adjust: none;*/
+}
+
+#fileList {
+    margin-top: -50px; /* ptr */
 }
 
 #fileList li, #localFileList li {
@@ -126,8 +129,8 @@ ul {
     display:none; 
     position:absolute; 
     z-index:1; 
-    top:15px; 
-    left: 70px;
+    top: 10px !important; 
+    left: 52px !important;
 }
 
 #theTopcoatNavBar {
@@ -169,4 +172,48 @@ ul {
 .iScrollIndicator {
     background: #a1a0a1 !important;
     width: 5px !important;
+}
+
+.pull-to-refresh {
+	line-height: 50px;
+	height: 50px;
+    width: 300px;
+}
+
+.pull-to-refresh >.message {
+	height: 50px;
+	width: 100%;
+	overflow-y: auto;
+	position: relative;
+}
+
+.pull-to-refresh >.message >i.arrow {
+	-webkit-background-size: 100% 100%;
+	-moz-background-size: 100% 100%;
+	background-size: 100% 100%;
+	display: inline-block;
+	margin-left: 10px;
+	background-position: center center;
+}
+
+.pull-to-refresh >.message >i.arrow {
+	width: 20px;
+	height: 50px;
+	background-image: url('../topcoat/img/arrow_up.svg');
+}
+
+.pull-to-refresh >.message > div.spinner {
+    margin-left: 12px;
+}
+
+.pull-to-refresh >.message >span.pull,
+.pull-to-refresh >.message >span.release,
+.pull-to-refresh >.message >span.loading {
+	text-align: center;
+	display: block;
+	height: 50px;
+	width: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
 }

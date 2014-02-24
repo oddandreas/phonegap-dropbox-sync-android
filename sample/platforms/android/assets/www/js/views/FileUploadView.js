@@ -1,6 +1,6 @@
 var FileUploadView = function (template, listTemplate) {
 
-    var _me = this;
+    var me = this;
     
     this.isTapHolding = false;
 
@@ -11,17 +11,17 @@ var FileUploadView = function (template, listTemplate) {
         this.el = $('<div/>');
 
         this.el.on('click', '#localFileList .folder', function(event) {
-            if (_me.isTapHolding) {
+            if (me.isTapHolding) {
                 event.preventDefault();
                 return;
             }
             app.localFileFullPath = $(this).attr('fullPath');
-            _me.getFolderWithPath();
+            me.getFolderWithPath();
             event.preventDefault();
         });
 
         this.el.on('taphold', '#localFileList a[href="#localFile"]', function(event) {
-            _me.isTapHolding = true;
+            me.isTapHolding = true;
             var fullPath = $(event.target).attr('fullPath'),
                 fileName = $(event.target).attr('fileName');
             if ($(event.target).hasClass('file')) {
@@ -29,7 +29,7 @@ var FileUploadView = function (template, listTemplate) {
                     'Confirm File Upload',
                     ['Yes', 'No'],
                     function (buttonIndex) {
-                        _me.isTapHolding = false;
+                        me.isTapHolding = false;
                         if (buttonIndex == 1) {
                             dropbox.uploadFile(fullPath, app.dropboxPath).done(function(result) {
                                 // nothing to do, add here if needed
@@ -44,7 +44,7 @@ var FileUploadView = function (template, listTemplate) {
                     'Confirm Folder Upload',
                     ['Yes', 'Yes (Recursive)', 'No'],
                     function (buttonIndex) {
-                        _me.isTapHolding = false;
+                        me.isTapHolding = false;
                         if (buttonIndex == 1 || buttonIndex == 2) {
                             var doRecursive = (buttonIndex == 2) ? true : false;
                             dropbox.uploadFolder(fullPath, app.dropboxPath, doRecursive).done(function(result) {
@@ -74,27 +74,12 @@ var FileUploadView = function (template, listTemplate) {
                     }
                 );
             } else {
-                _me.getParentFolder();
+                me.getParentFolder();
             }
             event.preventDefault();
         });
         
         window.onhashchange = null; // the notification dialog buttons can trigger a hashchange event, destroy the event listener
-
-        window.onorientationchange = null; // remove any current listeners
-        window.onorientationchange = function(event) {
-            switch (window.orientation) {
-                case -90:
-                case 90:
-                    // landscape
-                    app.loadIcon.css('left', '90px');
-                    break;
-                default:
-                    //portrait
-                    app.loadIcon.css('left', '70px');
-                    break;
-            }
-        };
          
     }; // end initialize
 
@@ -107,17 +92,17 @@ var FileUploadView = function (template, listTemplate) {
         window.resolveLocalFileSystemURI("file:///storage", function(dir) {
            app.localFileFullPath = dir.fullPath;
            var directoryReader = dir.createReader();
-           directoryReader.readEntries(_me.readerSuccess,_me.readerFail);
+           directoryReader.readEntries(me.readerSuccess,me.readerFail);
         }, function(err){
            console.log('failed to get /storage directory, error ' + err.code + '\nfalling back to using fileSystem.root.fullPath');
            app.localFileFullPath = fileSystem.root.fullPath;
            var directoryReader = fileSystem.root.createReader();
-           directoryReader.readEntries(_me.readerSuccess,_me.readerFail);
+           directoryReader.readEntries(me.readerSuccess,me.readerFail);
         });
     };
     
     this.readerSuccess = function(entries) {
-        _me.appendToLocalFileList(entries);
+        me.appendToLocalFileList(entries);
     };
 
     this.initialize();
@@ -130,7 +115,7 @@ FileUploadView.prototype.appendToLocalFileList = function(entries) {
         file,
         fileArray = [],
         folderArray = [],
-        _me = this;
+        me = this;
     if (fileCount > 0) {
         for (var i = 0; i < fileCount; i++) {
             file = entries[i];
@@ -153,13 +138,13 @@ FileUploadView.prototype.appendToLocalFileList = function(entries) {
         app.fileUploadViewIScroll.destroy();
     }
     setTimeout(function() {
-        app.fileUploadViewIScroll = new IScroll($('#localFileListScroller', _me.el)[0], {
+        app.fileUploadViewIScroll = new IScroll($('#localFileListScroller', me.el)[0], {
             scrollbars: true,
             fadeScrollbars: true,
             shrinkScrollbars: 'clip',
             click: true
         });
-        app.fileUploadViewIScroll.on('scrollEnd', _me.handleIScroll);
+        app.fileUploadViewIScroll.on('scrollEnd', me.onIScrollEnd);
         var checkIndex = app.fileUploadViewScrollCache.contains('path', app.localFileFullPath);
         if (checkIndex != -1) {
             app.fileUploadViewIScroll.scrollTo(0, app.fileUploadViewScrollCache[checkIndex].pos);
@@ -167,7 +152,7 @@ FileUploadView.prototype.appendToLocalFileList = function(entries) {
     }, 10);
 };
 
-FileUploadView.prototype.handleIScroll = function() {
+FileUploadView.prototype.onIScrollEnd = function() {
     var checkIndex = app.fileUploadViewScrollCache.contains('path', app.localFileFullPath);
     if (checkIndex == -1) {
         app.fileUploadViewScrollCache.push({
@@ -180,23 +165,23 @@ FileUploadView.prototype.handleIScroll = function() {
 };
 
 FileUploadView.prototype.getFolderWithPath = function() {
-    var _me = this;
+    var me = this;
     window.resolveLocalFileSystemURI(app.localFileFullPath, function(dir) {
         var directoryReader = dir.createReader();
-        directoryReader.readEntries(_me.readerSuccess,_me.readerFail);
+        directoryReader.readEntries(me.readerSuccess,me.readerFail);
     }, function(err){
         console.log("getDirectory error " + err.code);
     });
 };
 
 FileUploadView.prototype.getParentFolder = function() {
-    var _me = this;
+    var me = this;
     if (app.localFileFullPath != 'file:///storage/sdcard0' && app.localFileFullPath != 'file:///storage/sdcard') {
         window.resolveLocalFileSystemURI(app.localFileFullPath, function(dir) {
             dir.getParent(function(parent) {
                 app.localFileFullPath = parent.fullPath;
                 var directoryReader = parent.createReader(); // this gives the wrong path when at file:///storage/sdcard
-                directoryReader.readEntries(_me.readerSuccess,_me.readerFail);
+                directoryReader.readEntries(me.readerSuccess,me.readerFail);
             }, function(err){
                 console.log("getParent error " + err.code);
             });
@@ -207,7 +192,7 @@ FileUploadView.prototype.getParentFolder = function() {
         window.resolveLocalFileSystemURI('file:///storage', function(dir) {
             app.localFileFullPath = dir.fullPath;
             var directoryReader = dir.createReader();
-            directoryReader.readEntries(_me.readerSuccess,_me.readerFail);
+            directoryReader.readEntries(me.readerSuccess,me.readerFail);
         }, function(err){
             console.log("error getting storage directory, error " + err.code);
         });
