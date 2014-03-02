@@ -20,7 +20,7 @@ var FileUploadView = function (template, listTemplate) {
             event.preventDefault();
         });
 
-        this.el.on('taphold', '#localFileList a[href="#localFile"]', function(event) {
+        this.el.on('taphold', '#localFileList a', function(event) {
             me.isTapHolding = true;
             var fullPath = $(event.target).attr('fullPath'),
                 fileName = $(event.target).attr('fileName');
@@ -115,6 +115,7 @@ FileUploadView.prototype.appendToLocalFileList = function(entries) {
         file,
         fileArray = [],
         folderArray = [],
+        fileList = [],
         me = this;
     if (fileCount > 0) {
         for (var i = 0; i < fileCount; i++) {
@@ -127,7 +128,7 @@ FileUploadView.prototype.appendToLocalFileList = function(entries) {
         }
         folderArray.sortByKey('name');
         fileArray.sortByKey('name');
-        var fileList = folderArray.concat(fileArray);
+        fileList = folderArray.concat(fileArray);
         html = this.listTemplate(fileList);
     } else {
         html = this.listTemplate();
