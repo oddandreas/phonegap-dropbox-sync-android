@@ -90,6 +90,14 @@ public class DropboxPlugin extends CordovaPlugin {
             boolean doRecursive = args.getBoolean(2);
             uploadFolder(localPath, dropboxPath, doRecursive, callbackContext);
             return true;
+        } else if (action.equals("deleteFile")) {
+            String dropboxPath = args.getString(0);
+            deleteFile(dropboxPath, callbackContext);
+            return true;
+        } else if (action.equals("createFolder")) {
+            String dropboxPath = args.getString(0);
+            createFolder(dropboxPath, callbackContext);
+            return true;
         }
         return false;
     }
@@ -325,6 +333,44 @@ public class DropboxPlugin extends CordovaPlugin {
                     callbackContext.success();
                 } catch (Exception e) {
                     e.printStackTrace();
+                    callbackContext.error(PLUGIN_ERROR);
+                }
+            }
+        });
+    }
+    
+    private void deleteFile(final String dropboxPath, final CallbackContext callbackContext) {
+        Log.v(TAG, "deleteFile method executing");
+        cordova.getThreadPool().execute(new Runnable() {
+            public void run() {
+                try {
+                    DbxFileSystem dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
+                    DbxPath dbxPath = new DbxPath(dropboxPath);
+                    
+                    dbxFs.delete(dbxPath);
+                    dbxFs.syncNowAndWait();
+                    
+                    callbackContext.success();
+                } catch (Exception e) {
+                    callbackContext.error(PLUGIN_ERROR);
+                }
+            }
+        });
+    }
+    
+    private void createFolder(final String dropboxPath, final CallbackContext callbackContext) {
+        Log.v(TAG, "createFolder method executing");
+        cordova.getThreadPool().execute(new Runnable() {
+            public void run() {
+                try {
+                    DbxFileSystem dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
+                    DbxPath dbxPath = new DbxPath(dropboxPath);
+                    
+                    dbxFs.createFolder(dbxPath);
+                    dbxFs.syncNowAndWait();
+                    
+                    callbackContext.success();
+                } catch (Exception e) {
                     callbackContext.error(PLUGIN_ERROR);
                 }
             }
