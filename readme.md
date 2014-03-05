@@ -4,7 +4,7 @@ A PhoneGap plugin for the [Dropbox Sync API](https://www.dropbox.com/developers/
 
 Read my blog post [here](http://rossmartindev.blogspot.com/2013/08/phonegap-plugin-for-dropbox-sync-api.html)
 
-Sample Usage:
+Sample Usage
 -----------
 Link to Dropbox:
 
@@ -60,16 +60,17 @@ dropbox.deleteFile(filePath).done(function() {
 ```
 
 __Note: This plugin requires jQuery 1.5+ for the Deferred Object.__
- 
+
+Updates
+-----------
+***```3-4-14```***<br>**- Added ability to delete files/folders and create new folders in the Dropbox plugin.**<br>
+**- Updated sample app UI with Topcoat Effeckts.  Added Topcoat overlay and off screen nav menu with Effeckt CSS that uses webkit animations and transforms.**<br>
+**- Added a fix to the viewport in the sample app for Android 4.4 and higher.**
+
+***```2-24-14```***<br>**- Updated sample app to PhoneGap 3.4.0 and added pull to refresh feature on Dropbox list.**
+
+***```2-15-14```***<br>**- Added iScroll 5 and a scroll caching feature to the sample app.**
  
  ***```1-14-14```***<br>**- The sample app is now using handlebars.js, fastclick.js, and pageslider.js**<br>
 **- Only 1 view is in the DOM at a time now, this improved performance a lot**<br>
 **- The sample app requires API 19 (Android 4.4.2) SDK to build and run.  This is a result of upgrading to PhoneGap 3.3.1**
-
-***```2-15-14```***<br>**- Added iScroll 5 and a scroll caching feature to the sample app.**
-
-***```2-24-14```***<br>**- Updated sample app to PhoneGap 3.4.0 and added pull to refresh feature on Dropbox list.**
-
-***```3-4-14```***<br>**- Added ability to delete files/folders and create new folders in the Dropbox plugin.**<br>
-**- Updated sample app UI with Topcoat Effeckts.  Added Topcoat overlay and off screen nav menu with Effeckt CSS that uses webkit animations and transforms.**<br>
-**- Added a fix to the viewport in the sample app for Android 4.4 and higher.**
