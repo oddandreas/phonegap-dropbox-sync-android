@@ -208,6 +208,10 @@ ul {
 }
 
 /** topcoat effeckt content **/
+#effeckt-modal-wrap { /* custom */
+    top: 35% !important;
+}
+
 .topcoat-overlay { /* custom */
     width: 380px !important;
     margin-left: -190px !important;
