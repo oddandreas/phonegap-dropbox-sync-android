@@ -15,7 +15,7 @@ dropbox.link();
 List the Dropbox App's root folder:
 ```
 dropbox.listFolder("/").done(function(files) {
-    // each object index in files have properties: path, modifiedTime, size, and isFolder
+    // each object in files have properties: path, modifiedTime, size, and isFolder
 });
 ```
 
@@ -41,13 +41,35 @@ dropbox.uploadFolder(localFileUri, dropboxFolderPath, doRecursive).done(function
 });
 ```
 
+Create a new folder in Dropbox:
+```
+var folderPath = "/foo/bar";
+
+dropbox.createFolder(folderPath).done(function() {
+    // Creates a new folder, including parent folders if necessary.
+});
+```
+
+Delete a file/folder in Dropbox:
+```
+var filePath = "/foo/bar.json";
+
+dropbox.deleteFile(filePath).done(function() {
+    // Deletes a file, or recursively deletes a folder.
+});
+```
+
 __Note: This plugin requires jQuery 1.5+ for the Deferred Object.__
  
  
- ***```Update 1-14-14```***<br>**- The sample app is now using handlebars.js, fastclick.js, and pageslider.js**<br>
+ ***```1-14-14```***<br>**- The sample app is now using handlebars.js, fastclick.js, and pageslider.js**<br>
 **- Only 1 view is in the DOM at a time now, this improved performance a lot**<br>
 **- The sample app requires API 19 (Android 4.4.2) SDK to build and run.  This is a result of upgrading to PhoneGap 3.3.1**
 
-***```Update 2-15-14```***<br>**- Added iScroll 5 and a scroll caching feature to the sample app.**
+***```2-15-14```***<br>**- Added iScroll 5 and a scroll caching feature to the sample app.**
 
-***```Update 2-24-14```***<br>**- Updated sample app to PhoneGap 3.4.0 and added pull to refresh feature on Dropbox list.**
+***```2-24-14```***<br>**- Updated sample app to PhoneGap 3.4.0 and added pull to refresh feature on Dropbox list.**
+
+***```3-4-14```***<br>**- Added ability to delete files/folders and create new folders in the Dropbox plugin.**<br>
+**- Updated sample app UI with Topcoat Effeckts.  Added Topcoat overlay and off screen nav menu with Effeckt CSS that uses webkit animations and transforms.**<br>
+**- Added a fix to the viewport in the sample app for Android 4.4 and higher.**
