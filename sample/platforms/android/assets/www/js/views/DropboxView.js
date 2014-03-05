@@ -38,7 +38,6 @@ var DropboxView = function (template, listTemplate) {
                 dropboxFilePath = (app.dropboxPath == '/') ? '/' + fileName : app.dropboxPath + '/' + fileName;
             me.showFileTapholdModal(fileName).done(function(el) {
                 app.hideModal();
-                console.log('modal is done and deferred resolved, el.id: ' + el.id);
                 switch(el.id) {
                     case 'btn-share':
                         // todo

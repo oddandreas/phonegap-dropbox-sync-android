@@ -27,10 +27,8 @@ var FileUploadView = function (template, listTemplate) {
                 isFile = $(event.target).hasClass('file');
             me.showFileTapholdModal(fileName, isFile).done(function(el) {
                 app.hideModal();
-                console.log('modal is done and deferred resolved, el.id: ' + el.id);
                 switch(el.id) {
                     case 'btn-uploadFile':
-                        console.log('btn-uploadFile');
                         dropbox.uploadFile(fullPath, app.dropboxPath).done(function(result) {
                             // nothing to do, add here if needed
                         }).fail(function (err) {
@@ -38,7 +36,6 @@ var FileUploadView = function (template, listTemplate) {
                         });
                         break;
                     case 'btn-uploadFolderRecursive':
-                        console.log('btn-uploadFolderRecursive');
                         dropbox.uploadFolder(fullPath, app.dropboxPath, true).done(function(result) {
                             // nothing to do, add here if needed
                         }).fail(function (err) {
@@ -46,7 +43,6 @@ var FileUploadView = function (template, listTemplate) {
                         });
                         break;
                     case 'btn-uploadFolder':
-                        console.log('btn-uploadFolder');
                         dropbox.uploadFolder(fullPath, app.dropboxPath, false).done(function(result) {
                             // nothing to do, add here if needed
                         }).fail(function (err) {
