@@ -162,6 +162,10 @@ ul {
     text-align: left;
 }
 
+#modalNavHeader {
+    text-align: center;
+}
+
 /** pull to refresh **/
 .pull-to-refresh {
 	line-height: 50px;
@@ -208,13 +212,9 @@ ul {
 }
 
 /** topcoat effeckt content **/
-#effeckt-modal-wrap { /* custom */
-    top: 35% !important;
-}
-
-.topcoat-overlay { /* custom */
-    width: 380px !important;
-    margin-left: -190px !important;
+.effeckt-modal-wrap { /* custom */
+  max-width: 380px !important;
+  min-width: 380px !important;
 }
 
 .no-transitions,
@@ -244,7 +244,8 @@ body {
 
 .effeckt-modal {
   background: #dfe2e2;
-  padding: 0;
+  padding: 1.5px; /* custom */
+  border-radius: 6px; /* custom */
 }
 
 .effeckt-overlay {
