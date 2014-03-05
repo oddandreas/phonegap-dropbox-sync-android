@@ -50,7 +50,6 @@ var dropbox = (function() {
                 deferred.resolve(result);
             },
             function(error) {
-                alert("getFiles error");
                 console.log("getFiles error");
                 deferred.reject(error);
             },
@@ -122,6 +121,32 @@ var dropbox = (function() {
             pluginName, "uploadFolder", [folderPath, dropboxPath, doRecursive]);
         return deferred.promise();
     }
+    
+    var deleteFile = function(dropboxPath) {
+        var deferred = $.Deferred();
+        Cordova.exec(
+            function(result) {
+                deferred.resolve(result);
+            },
+            function(error) {
+                deferred.reject();
+            },
+            pluginName, "deleteFile", [dropboxPath]);
+        return deferred.promise();
+    }
+    
+    var createFolder = function(dropboxPath) {
+        var deferred = $.Deferred();
+        Cordova.exec(
+            function(result) {
+                deferred.resolve(result);
+            },
+            function(error) {
+                deferred.reject();
+            },
+            pluginName, "createFolder", [dropboxPath]);
+        return deferred.promise();
+    }
 
     return {
         link: link,
@@ -132,7 +157,9 @@ var dropbox = (function() {
         readData: readData,
         readString: readString,
         uploadFile: uploadFile,
-        uploadFolder: uploadFolder
+        uploadFolder: uploadFolder,
+        deleteFile: deleteFile,
+        createFolder: createFolder
     }
 
 })();

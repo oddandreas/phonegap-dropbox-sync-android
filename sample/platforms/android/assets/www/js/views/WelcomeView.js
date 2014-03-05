@@ -10,7 +10,7 @@ var WelcomeView = function (template) {
         });
         
         this.el.on('click', '#btn-back', function(event) {
-            app.showExitConfirm();
+            app.showExitModal();
             event.preventDefault();
         });
          

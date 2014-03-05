@@ -1,39 +1,21 @@
 var DropboxView = function (template, listTemplate) {
 
-    this.initialize = function () {
+    var me = this;
+    
+    this.isTapHolding = false;
+    
+    this.listTemplate = listTemplate;
 
-        this.listTemplate = listTemplate;
-        
-        if (! template) return; // making instance just for listFolder method
-        
-        var me = this;
+    this.initialize = function () {
         
         this.el = $('<div/>');
 
-        this.el.on('click', '#btn-uploadFiles', function(event) {
-            app.showFileUploadView();
-            event.preventDefault();
-         });
-        
-        this.el.on("click", '#btn-unlink', function(event) {
-            window.confirm('Unlink from Dropbox?', 'Confirm Unlink', ['Yes', 'No'], 
-            function(buttonIndex) {
-                if (buttonIndex == 1) {
-                    app.showLoader();
-                    dropbox.unlink().done(function() {
-                        app.hideLoader();
-                        app.showWelcomeView();
-                    });
-                }
-            });
-            event.preventDefault();
-        });
-        
         this.el.on('click', '#fileList .file', function(event) {
+            if (me.isTapHolding) return;
             var filePath = decodeURIComponent($(event.currentTarget).attr('href').substr(1));
             $('#filePath').html(filePath);
             app.showLoader();
-            if( (/\.(gif|jpg|jpeg|tiff|png)$/i).test(filePath) ) {
+            if ( (/\.(gif|jpg|jpeg|tiff|png)$/i).test(filePath) ) {
                 $('#text, #image').hide();
                 dropbox.readData(filePath).done(function(result) {
                     var bytes = new Uint8Array(result);
@@ -50,12 +32,73 @@ var DropboxView = function (template, listTemplate) {
             event.preventDefault();
         });
         
-        this.el.on('click', '#btn-back', function(event) {
-            (app.dropboxPath == '/') ? app.showExitConfirm() : window.history.back();
+        this.el.on('taphold', '#fileList li a', function(event) {
+            me.isTapHolding = true;
+            var fileName = $(event.target).text().trim(),
+                dropboxFilePath = (app.dropboxPath == '/') ? '/' + fileName : app.dropboxPath + '/' + fileName;
+            me.showFileTapholdModal(fileName).done(function(el) {
+                app.hideModal();
+                console.log('modal is done and deferred resolved, el.id: ' + el.id);
+                switch(el.id) {
+                    case 'btn-share':
+                        // todo
+                        break;
+                    case 'btn-RenameFile':
+                        // todo
+                        break;
+                    case 'btn-deleteFile':
+                        dropbox.deleteFile(dropboxFilePath).done(function(result) {
+                            me.listFolder();
+                        }).fail(function() {
+                            console.log('dropbox.deleteFile failed');
+                        });
+                        break;
+                }
+                me.isTapHolding = false;
+            }).fail(function() {
+                me.isTapHolding = false;
+            });
             event.preventDefault();
         });
         
-        window.onhashchange = function() {
+        this.el.on('click', '#btn-back', function(event) {
+            (app.dropboxPath == '/') ? app.showExitModal() : window.history.back();
+            event.preventDefault();
+        });
+        
+        $('#effeckt-off-screen-nav').off(); // unbind previous events from any other view first
+        
+        $('#effeckt-off-screen-nav').on('click', '#btn-uploadFiles', function(event) {
+            app.toggleNav().done(function() {
+                app.showFileUploadView();
+            });
+            event.preventDefault();
+        });
+        
+        $('#effeckt-off-screen-nav').on('click', '#btn-newFolder', function(event) {
+            app.toggleNav().done(function() {
+                window.showPrompt('Enter folder name', function(results) {
+                    event.preventDefault(); // dialog btns can trigger hashchange, need this
+                    if (results.buttonIndex == 1) {
+                        var folderName = results.input1.trim(),
+                            dropboxFilePath = (app.dropboxPath == '/') ? '/' + folderName : app.dropboxPath + '/' + folderName;
+                        if (dropboxFilePath == '/') return; // user tapped OK but didn't type a folder name
+                        dropbox.createFolder(dropboxFilePath).done(function(result) {
+                            me.listFolder();
+                        }).fail(function() {
+                            console.log('dropbox.createFolder failed');
+                        });
+                    }
+                }, 'New Folder', ['Ok', 'Cancel'], '');
+            });
+            event.preventDefault();
+        });
+
+        window.onhashchange = function(event) {
+            if (me.isTapHolding) { 
+                event.preventDefault();
+                return false;
+            }
             app.dropboxPath = decodeURIComponent(window.location.hash.substr(1));
             if (app.dropboxPath == '') {
                 app.dropboxPath = '/';
@@ -73,7 +116,9 @@ var DropboxView = function (template, listTemplate) {
                 $('#text').css('max-width', w);
             }, 300);
         };
-         
+        
+        me.createNavMenu();
+
     }; // end initialize
 
     this.render = function() {
@@ -87,16 +132,14 @@ var DropboxView = function (template, listTemplate) {
 
 DropboxView.prototype.listFolder = function() {
     var i,
-        l,
         html = "",
         file,
         fileArray = [],
         folderArray = [],
+        fileList = [],
         me = this;
     dropbox.listFolder(app.dropboxPath).done(function(files) {
-        l = files.length;
-        (l > 0) ? $("#noFiles").hide() : $("#noFiles").show();
-        for (i = 0; i < l; i++) {
+        for (i = 0; i < files.length; i++) {
             file = files[i];
             file.fileName = files[i].path.substr(file.path.lastIndexOf("/") + 1);
             file.encodedPath = encodeURIComponent(files[i].path);
@@ -108,12 +151,12 @@ DropboxView.prototype.listFolder = function() {
         }
         folderArray.sortByKey('path');
         fileArray.sortByKey('path');
-        var fileList = folderArray.concat(fileArray);
+        fileList = folderArray.concat(fileArray);
         html = me.listTemplate(fileList);
         $('#path').html(app.dropboxPath);
-        $("#fileList").html(html);
+        $('#fileList').html(html);
         if (app.dropboxViewIScroll) {
-            app.dropboxViewIScroll.destroy();
+            app.dropboxViewIScroll.destroy(); // refresh isn't working correctly
         }
         setTimeout(function() {
             app.dropboxViewIScroll = new IScroll($('#scroller', me.el)[0], {
@@ -139,7 +182,7 @@ DropboxView.prototype.listFolder = function() {
             if (checkIndex != -1) {
                 app.dropboxViewIScroll.scrollTo(0, app.dropboxViewScrollCache[checkIndex].pos);
             }
-        }, 10);
+        }, 50);
     });
 };
 
@@ -153,4 +196,59 @@ DropboxView.prototype.onIScrollEnd = function() {
     } else {
         app.dropboxViewScrollCache[checkIndex].pos = this.y;
     }
+};
+
+DropboxView.prototype.createNavMenu = function() {
+    app.createNavMenu({
+        header: 'Dropbox',
+        listItem:  [
+                        {
+                            text: 'Upload Here',
+                            id: 'btn-uploadFiles'
+                        },
+                        {
+                            text: 'New Folder Here',
+                            id: 'btn-newFolder'
+                        },
+                        {
+                            text: 'Unlink',
+                            id: 'btn-unlink',
+                            onClickEvent: 'app.showUnlinkModal()'
+                        }
+                   ]
+    });
+};
+
+DropboxView.prototype.showFileTapholdModal = function(fileName) {
+    app.modalDeferred = $.Deferred();
+    
+    app.createModal({
+        header: fileName,
+        listItem:  [
+                        {
+                            text: 'Share',
+                            id: 'btn-share',
+                            onClickEvent: 'app.resolveModalDeferred(this)'
+                        },
+                        {
+                            text: 'Rename',
+                            id: 'btn-RenameFile',
+                            onClickEvent: 'app.resolveModalDeferred(this)'
+                        },
+                        {
+                            text: 'Move',
+                            id: 'btn-moveFile',
+                            onClickEvent: 'app.resolveModalDeferred(this)'
+                        },
+                        {
+                            text: 'Delete',
+                            id: 'btn-deleteFile',
+                            onClickEvent: 'app.resolveModalDeferred(this)'
+                        }
+                   ]
+    });
+    
+    app.showModal();
+    
+    return app.modalDeferred.promise();
 };

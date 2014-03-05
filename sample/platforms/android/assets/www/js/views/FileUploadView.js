@@ -10,7 +10,7 @@ var FileUploadView = function (template, listTemplate) {
 
         this.el = $('<div/>');
 
-        this.el.on('click', '#localFileList .folder', function(event) {
+        this.el.on('click', '#localFileList li a.folder', function(event) {
             if (me.isTapHolding) {
                 event.preventDefault();
                 return;
@@ -20,66 +20,77 @@ var FileUploadView = function (template, listTemplate) {
             event.preventDefault();
         });
 
-        this.el.on('taphold', '#localFileList a', function(event) {
+        this.el.on('taphold', '#localFileList li a', function(event) {
             me.isTapHolding = true;
             var fullPath = $(event.target).attr('fullPath'),
-                fileName = $(event.target).attr('fileName');
-            if ($(event.target).hasClass('file')) {
-                window.confirm('Upload ' + fileName + ' to ' + app.dropboxPath + ' in Dropbox?',
-                    'Confirm File Upload',
-                    ['Yes', 'No'],
-                    function (buttonIndex) {
-                        me.isTapHolding = false;
-                        if (buttonIndex == 1) {
-                            dropbox.uploadFile(fullPath, app.dropboxPath).done(function(result) {
-                                // nothing to do, add here if needed
-                            }).fail(function (err) {
-                                console.log('dropbox.uploadFile fail, err -> ' + err);
-                            });
-                        }
-                    }
-                );
-            } else {
-                window.confirm('Upload ' + fileName + ' folder to ' + app.dropboxPath + ' in Dropbox?',
-                    'Confirm Folder Upload',
-                    ['Yes', 'Yes (Recursive)', 'No'],
-                    function (buttonIndex) {
-                        me.isTapHolding = false;
-                        if (buttonIndex == 1 || buttonIndex == 2) {
-                            var doRecursive = (buttonIndex == 2) ? true : false;
-                            dropbox.uploadFolder(fullPath, app.dropboxPath, doRecursive).done(function(result) {
-                                // nothing to do, add here if needed
-                            }).fail(function (err) {
-                                console.log('dropbox.uploadFolder fail');
-                            });
-                        }
-                    }
-                );
-            }
-            event.preventDefault();
-        });
-
-        this.el.on('click', '#btn-backToDropboxView', function(event) {
-            app.showDropboxView();
+                fileName = $(event.target).attr('fileName'),
+                isFile = $(event.target).hasClass('file');
+            me.showFileTapholdModal(fileName, isFile).done(function(el) {
+                app.hideModal();
+                console.log('modal is done and deferred resolved, el.id: ' + el.id);
+                switch(el.id) {
+                    case 'btn-uploadFile':
+                        console.log('btn-uploadFile');
+                        dropbox.uploadFile(fullPath, app.dropboxPath).done(function(result) {
+                            // nothing to do, add here if needed
+                        }).fail(function (err) {
+                            console.log('dropbox.uploadFile fail, err -> ' + err);
+                        });
+                        break;
+                    case 'btn-uploadFolderRecursive':
+                        console.log('btn-uploadFolderRecursive');
+                        dropbox.uploadFolder(fullPath, app.dropboxPath, true).done(function(result) {
+                            // nothing to do, add here if needed
+                        }).fail(function (err) {
+                            console.log('dropbox.uploadFolder fail');
+                        });
+                        break;
+                    case 'btn-uploadFolder':
+                        console.log('btn-uploadFolder');
+                        dropbox.uploadFolder(fullPath, app.dropboxPath, false).done(function(result) {
+                            // nothing to do, add here if needed
+                        }).fail(function (err) {
+                            console.log('dropbox.uploadFolder fail');
+                        });
+                        break;
+                    case 'btn-RenameFile':
+                        // todo
+                        break;
+                    case 'btn-deleteFile':
+                        // todo
+                        break;
+                }
+                me.isTapHolding = false;
+            }).fail(function() {
+                me.isTapHolding = false;
+            });
             event.preventDefault();
         });
 
         this.el.on('click', '#btn-back', function(event) {
             if (app.localFileFullPath == 'file:///') { // if we're at root
-                window.confirm('Go back to Dropbox list?', 'Show Dropbox', ['Yes', 'No'], 
-                    function(buttonIndex) {
-                        if (buttonIndex == 1) {
-                            app.showDropboxView();
-                        }
-                    }
-                );
+                me.showBackToDropboxModal().done(function(el) {
+                    app.hideModal();
+                    app.showDropboxView();
+                });
             } else {
                 me.getParentFolder();
             }
             event.preventDefault();
         });
         
+        $('#effeckt-off-screen-nav').off(); // unbind previous events from any other view first
+        
+        $('#effeckt-off-screen-nav').on('click', '#btn-backToDropboxView', function(event) {
+            app.toggleNav().done(function() {
+                app.showDropboxView();
+            });
+            event.preventDefault();
+        });
+        
         window.onhashchange = null; // the notification dialog buttons can trigger a hashchange event, destroy the event listener
+        
+        me.createNavMenu();
          
     }; // end initialize
 
@@ -136,7 +147,7 @@ FileUploadView.prototype.appendToLocalFileList = function(entries) {
     $('#localPath').text( (app.localFileFullPath != '') ? app.localFileFullPath : 'file:///storage' );
     $('#localFileList').html(html);
     if (app.fileUploadViewIScroll) {
-        app.fileUploadViewIScroll.destroy();
+        app.fileUploadViewIScroll.destroy(); // refresh isn't working correctly
     }
     setTimeout(function() {
         app.fileUploadViewIScroll = new IScroll($('#localFileListScroller', me.el)[0], {
@@ -150,7 +161,7 @@ FileUploadView.prototype.appendToLocalFileList = function(entries) {
         if (checkIndex != -1) {
             app.fileUploadViewIScroll.scrollTo(0, app.fileUploadViewScrollCache[checkIndex].pos);
         }
-    }, 10);
+    }, 50);
 };
 
 FileUploadView.prototype.onIScrollEnd = function() {
@@ -208,3 +219,87 @@ FileUploadView.prototype.FSfail = function(err) {
 FileUploadView.prototype.readerFail = function(error) {
     alert("Failed to list directory contents: " + error.code);
 };
+
+FileUploadView.prototype.createNavMenu = function() {
+    app.createNavMenu({
+        header: 'Local File Browser',
+        listItem:  [
+                        {
+                            text: 'Back to Dropbox List',
+                            id: 'btn-backToDropboxView'
+                        },
+                        {
+                            text: 'New Folder Here',
+                            id: 'btn-newFolder'
+                        },
+                        {
+                            text: 'Unlink',
+                            id: 'btn-unlink',
+                            onClickEvent: 'app.showUnlinkModal()'
+                        }
+                   ]
+    });
+};
+
+FileUploadView.prototype.showFileTapholdModal = function(fileName, isFile) {
+    app.modalDeferred = $.Deferred();
+    
+    var listObjs = [];
+    
+    if (isFile) {
+        listObjs.push({
+            text: 'Upload File',
+            id: 'btn-uploadFile',
+            onClickEvent: 'app.resolveModalDeferred(this)'
+        });
+    } else {
+        listObjs.push(
+            {
+                text: 'Upload Folder Recursively',
+                id: 'btn-uploadFolderRecursive',
+                onClickEvent: 'app.resolveModalDeferred(this)'
+            },
+            {
+                text: 'Upload Folder',
+                id: 'btn-uploadFolder',
+                onClickEvent: 'app.resolveModalDeferred(this)'
+            }
+        );
+    }
+    
+    listObjs.push(
+        {
+            text: 'Rename',
+            id: 'btn-RenameFile',
+            onClickEvent: 'app.resolveModalDeferred(this)'
+        }
+    );
+    
+    app.createModal({
+        header: fileName,
+        listItem: listObjs
+    });
+    
+    app.showModal();
+    
+    return app.modalDeferred.promise();
+};
+
+FileUploadView.prototype.showBackToDropboxModal = function() {
+    app.modalDeferred = $.Deferred();
+    
+    app.createModal({
+        header: 'Go back to Dropbox List?',
+        listItem:  [
+                        {
+                            text: 'Back to Dropbox List',
+                            id: 'btn-backToDropbox',
+                            onClickEvent: 'app.resolveModalDeferred(this)'
+                        }
+                   ]
+    });
+    
+    app.showModal();
+    
+    return app.modalDeferred.promise();
+}

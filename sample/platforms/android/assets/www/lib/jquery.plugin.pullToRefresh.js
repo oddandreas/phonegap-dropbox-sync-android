@@ -32,6 +32,10 @@
 			if (!isTouch) {
 				return;
 			}
+            
+            if ($('.topcoat-list div.pull-to-refresh', $(this)).length > 0) {
+                return;
+            }
 
 			//var e = $(this).prepend(html),
             var e = $(this).find('.topcoat-list').prepend(html),
