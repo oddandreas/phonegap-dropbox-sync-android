@@ -1,10 +1,11 @@
 var dropbox = (function() {
 
-    var pluginName = "com.rossmartin.dropbox";
+    var pluginName = "com.rossmartin.dropbox",
+        exec = cordova.require("cordova/exec"); // https://github.com/ccoenraets/phonegap-dropbox-sync/issues/2
 
     var link = function() {
         var deferred = $.Deferred();
-        Cordova.exec(
+        exec(
             function(result) {
                 setTimeout(function() {
                     deferred.resolve(result);
@@ -19,7 +20,7 @@ var dropbox = (function() {
 
     var checkLink = function() {
         var deferred = $.Deferred();
-        Cordova.exec(
+        exec(
             function(result) {
                 deferred.resolve(result);
             },
@@ -32,7 +33,7 @@ var dropbox = (function() {
 
     var unlink = function() {
         var deferred = $.Deferred();
-        Cordova.exec(
+        exec(
             function(result) {
                 deferred.resolve(result);
             },
@@ -45,7 +46,7 @@ var dropbox = (function() {
 
     var listFolder = function(path) {
         var deferred = $.Deferred();
-        Cordova.exec(
+        exec(
             function(result) {
                 deferred.resolve(result);
             },
@@ -59,7 +60,7 @@ var dropbox = (function() {
 
     var addObserver = function(path) {
         var deferred = $.Deferred();
-        Cordova.exec(
+        exec(
             function(result) {
                 deferred.resolve(result);
             },
@@ -72,7 +73,7 @@ var dropbox = (function() {
 
     var readData = function(fileName) {
         var deferred = $.Deferred();
-        Cordova.exec(
+        exec(
             function(result) {
                 deferred.resolve(result);
             },
@@ -85,7 +86,7 @@ var dropbox = (function() {
 
     var readString = function(fileName) {
         var deferred = $.Deferred();
-        Cordova.exec(
+        exec(
             function(result) {
                 deferred.resolve(result);
             },
@@ -98,7 +99,7 @@ var dropbox = (function() {
     
     var uploadFile = function(filePath, dropboxPath) {
         var deferred = $.Deferred();
-        Cordova.exec(
+        exec(
             function(result) {
                 deferred.resolve(result);
             },
@@ -111,7 +112,7 @@ var dropbox = (function() {
     
     var uploadFolder = function(folderPath, dropboxPath, doRecursive) {
         var deferred = $.Deferred();
-        Cordova.exec(
+        exec(
             function(result) {
                 deferred.resolve(result);
             },
@@ -124,7 +125,7 @@ var dropbox = (function() {
     
     var deleteFile = function(dropboxPath) {
         var deferred = $.Deferred();
-        Cordova.exec(
+        exec(
             function(result) {
                 deferred.resolve(result);
             },
@@ -137,7 +138,7 @@ var dropbox = (function() {
     
     var createFolder = function(dropboxPath) {
         var deferred = $.Deferred();
-        Cordova.exec(
+        exec(
             function(result) {
                 deferred.resolve(result);
             },
