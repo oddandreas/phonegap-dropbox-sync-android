@@ -35,6 +35,9 @@ var FileUploadView = function (template, listTemplate) {
                             console.log('dropbox.uploadFile fail, err -> ' + err);
                         });
                         break;
+                    case 'btn-openFile':
+                        window.plugins.fileOpener.open(fullPath);
+                        break;
                     case 'btn-uploadFolderRecursive':
                         dropbox.uploadFolder(fullPath, app.dropboxPath, true).done(function(result) {
                             // nothing to do, add here if needed
@@ -243,11 +246,18 @@ FileUploadView.prototype.showFileTapholdModal = function(fileName, isFile) {
     var listObjs = [];
     
     if (isFile) {
-        listObjs.push({
-            text: 'Upload File',
-            id: 'btn-uploadFile',
-            onClickEvent: 'app.resolveModalDeferred(this)'
-        });
+        listObjs.push(
+            {
+                text: 'Upload File',
+                id: 'btn-uploadFile',
+                onClickEvent: 'app.resolveModalDeferred(this)'
+            },
+            {
+                text: 'Open File',
+                id: 'btn-openFile',
+                onClickEvent: 'app.resolveModalDeferred(this)'
+            }
+        );
     } else {
         listObjs.push(
             {
