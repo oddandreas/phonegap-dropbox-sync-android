@@ -1,5 +1,7 @@
 package com.rossmartin.dropbox;
 
+import java.io.IOException;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -12,15 +14,23 @@ public class FileOpener extends CordovaPlugin {
 
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
-        if (action.equals("openFile")) {
-            String fileUrl = args.getString(0);
-            openFile(fileUrl, callbackContext);
-            return true;
+        try {
+            if (action.equals("openFile")) {
+                openFile(args.getString(0));
+                callbackContext.success();
+                return true;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            callbackContext.error(e.getMessage());
+        } catch (RuntimeException e) {  // KLUDGE for Activity Not Found
+            e.printStackTrace();
+            callbackContext.error(e.getMessage());
         }
         return false;
     }
 
-    private void openFile(String url, CallbackContext callbackContext) {
+    private void openFile(String url) throws IOException {
         // Create URI
         Uri uri = Uri.parse(url);
 
@@ -83,8 +93,6 @@ public class FileOpener extends CordovaPlugin {
         }
 
         this.cordova.getActivity().startActivity(intent);
-        
-        callbackContext.success();
     }
     
 }
