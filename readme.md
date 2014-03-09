@@ -73,6 +73,9 @@ __Note: This plugin requires jQuery 1.5+ for the Deferred Object.__
 
 Updates
 -----------
+***```3-8-14```***<br>**- Removed use of the "readData" & "readString" methods in the sample app.  Now Android device will either open the file with proper external application installed on your device or ask you which application to use.**<br>
+**- The "readData" & "readString" methods are still in the plugin.**<br>
+
 ***```3-4-14```***<br>**- Added ability to delete files/folders and create new folders in the Dropbox plugin.**<br>
 **- Updated sample app UI with Topcoat Effeckts.  Added Topcoat overlay and off screen nav menu with Effeckt CSS that uses webkit animations and transforms.**<br>
 **- Added a fix to the viewport in the sample app for Android 4.4 and higher.**
