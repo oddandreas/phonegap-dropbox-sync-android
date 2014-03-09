@@ -41,6 +41,16 @@ dropbox.uploadFolder(localFileUri, dropboxFolderPath, doRecursive).done(function
 });
 ```
 
+Open a Dropbox file:
+```
+var filePath = "/foo/bar.jpg";
+
+dropbox.openFile(filePath).done(function() {
+    // Android device will either open the file with the proper external application
+    // installed on your device or ask you which application to use
+});
+```
+
 Create a new folder in Dropbox:
 ```
 var folderPath = "/foo/bar";
