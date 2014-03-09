@@ -44,7 +44,7 @@ var dropbox = (function() {
         return deferred.promise();
     }
 
-    var listFolder = function(path) {
+    var listFolder = function(dropboxPath) {
         var deferred = $.Deferred();
         exec(
             function(result) {
@@ -54,11 +54,11 @@ var dropbox = (function() {
                 console.log("getFiles error");
                 deferred.reject(error);
             },
-            pluginName, "listFolder", [path]);
+            pluginName, "listFolder", [dropboxPath]);
         return deferred.promise();
     }
 
-    var addObserver = function(path) {
+    var addObserver = function(dropboxPath) {
         var deferred = $.Deferred();
         exec(
             function(result) {
@@ -67,11 +67,11 @@ var dropbox = (function() {
             function(error) {
                 deferred.reject(error);
             },
-            pluginName, "addObserver", [path]);
+            pluginName, "addObserver", [dropboxPath]);
         return deferred.promise();
     }
 
-    var readData = function(fileName) {
+    var readData = function(dropboxFilePath) {
         var deferred = $.Deferred();
         exec(
             function(result) {
@@ -80,11 +80,11 @@ var dropbox = (function() {
             function(error) {
                 deferred.reject();
             },
-            pluginName, "readData", [fileName]);
+            pluginName, "readData", [dropboxFilePath]);
         return deferred.promise();
     }
 
-    var readString = function(fileName) {
+    var readString = function(dropboxFilePath) {
         var deferred = $.Deferred();
         exec(
             function(result) {
@@ -93,7 +93,7 @@ var dropbox = (function() {
             function(error) {
                 deferred.reject();
             },
-            pluginName, "readString", [fileName]);
+            pluginName, "readString", [dropboxFilePath]);
         return deferred.promise();
     }
     
@@ -123,7 +123,7 @@ var dropbox = (function() {
         return deferred.promise();
     }
     
-    var deleteFile = function(dropboxPath) {
+    var deleteFile = function(dropboxFilePath) {
         var deferred = $.Deferred();
         exec(
             function(result) {
@@ -132,11 +132,11 @@ var dropbox = (function() {
             function(error) {
                 deferred.reject();
             },
-            pluginName, "deleteFile", [dropboxPath]);
+            pluginName, "deleteFile", [dropboxFilePath]);
         return deferred.promise();
     }
     
-    var createFolder = function(dropboxPath) {
+    var createFolder = function(dropboxFilePath) {
         var deferred = $.Deferred();
         exec(
             function(result) {
@@ -145,7 +145,20 @@ var dropbox = (function() {
             function(error) {
                 deferred.reject();
             },
-            pluginName, "createFolder", [dropboxPath]);
+            pluginName, "createFolder", [dropboxFilePath]);
+        return deferred.promise();
+    }
+    
+    var openFile = function(dropboxFilePath) {
+        var deferred = $.Deferred();
+        exec(
+            function(result) {
+                deferred.resolve(result);
+            },
+            function(error) {
+                deferred.reject();
+            },
+            pluginName, "openFile", [dropboxFilePath]);
         return deferred.promise();
     }
 
@@ -160,7 +173,8 @@ var dropbox = (function() {
         uploadFile: uploadFile,
         uploadFolder: uploadFolder,
         deleteFile: deleteFile,
-        createFolder: createFolder
+        createFolder: createFolder,
+        openFile: openFile
     }
 
 })();

@@ -10,11 +10,12 @@ var DropboxView = function (template, listTemplate) {
         
         this.el = $('<div/>');
 
-        this.el.on('click', '#fileList .file', function(event) {
+        this.el.on('click', '#fileList li a.file', function(event) {
             if (me.isTapHolding) return;
             var filePath = decodeURIComponent($(event.currentTarget).attr('href').substr(1));
-            $('#filePath').html(filePath);
             app.showLoader();
+            // decided to open files externally rather than inside app, readData & readString are still in plugin though
+            /*$('#filePath').html(filePath);
             if ( (/\.(gif|jpg|jpeg|tiff|png)$/i).test(filePath) ) {
                 $('#text, #image').hide();
                 dropbox.readData(filePath).done(function(result) {
@@ -28,7 +29,13 @@ var DropboxView = function (template, listTemplate) {
                     $('#text').html(result).show();
                     app.hideLoader();
                 });
-            }
+            }*/
+            dropbox.openFile(filePath).done(function() {
+                app.hideLoader();
+            }).fail(function() {
+                app.hideLoader();
+                console.log('dropbox.openFile failed');
+            });
             event.preventDefault();
         });
         
@@ -105,17 +112,7 @@ var DropboxView = function (template, listTemplate) {
             $('#path').html(app.dropboxPath);
             me.listFolder();
         };
-        
-        window.onorientationchange = null; // remove any current listeners
-        window.onorientationchange = function(event) {
-            setTimeout(function() {
-                var h = $('#content').height(),
-                    w = $('#content').width();
-                $('#image').css({'max-width':w, 'max-height':h});
-                $('#text').css('max-width', w);
-            }, 300);
-        };
-        
+
         me.createNavMenu();
 
     }; // end initialize

@@ -9,6 +9,14 @@ var FileUploadView = function (template, listTemplate) {
     this.initialize = function () {
 
         this.el = $('<div/>');
+        
+        this.el.on('click', '#localFileList li a.file', function(event) {
+            if (me.isTapHolding) {
+                event.preventDefault();
+                return;
+            }
+            window.plugins.fileOpener.open($(this).attr('fullPath'));
+        });
 
         this.el.on('click', '#localFileList li a.folder', function(event) {
             if (me.isTapHolding) {
@@ -34,9 +42,6 @@ var FileUploadView = function (template, listTemplate) {
                         }).fail(function (err) {
                             console.log('dropbox.uploadFile fail, err -> ' + err);
                         });
-                        break;
-                    case 'btn-openFile':
-                        window.plugins.fileOpener.open(fullPath);
                         break;
                     case 'btn-uploadFolderRecursive':
                         dropbox.uploadFolder(fullPath, app.dropboxPath, true).done(function(result) {
@@ -250,11 +255,6 @@ FileUploadView.prototype.showFileTapholdModal = function(fileName, isFile) {
             {
                 text: 'Upload File',
                 id: 'btn-uploadFile',
-                onClickEvent: 'app.resolveModalDeferred(this)'
-            },
-            {
-                text: 'Open File',
-                id: 'btn-openFile',
                 onClickEvent: 'app.resolveModalDeferred(this)'
             }
         );

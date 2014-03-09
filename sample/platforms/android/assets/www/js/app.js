@@ -25,13 +25,6 @@ var app = (function() {
         viewContainer.empty();
         slider.slidePageFrom(dropboxView.render().el, (fromFileUploadView) ? 'left' : 'right');
         
-        var h = $('#content').height(),
-            w = $('#content').width();
-        
-        $('#image').css({'max-width': w, 'max-height': h});
-        $('#text').css('max-width', w);
-        loadIcon.css('left', '60px');
-        
         dropboxView.listFolder();
         dropbox.addObserver("/");
     }
@@ -40,8 +33,6 @@ var app = (function() {
         var fileUploadView = new FileUploadView(fileUploadViewTpl, localFileListTpl);
         viewContainer.empty();
         slider.slidePageFrom(fileUploadView.render().el, 'right');
-        
-        loadIcon.css('left', '70px');
         
         if (app.localFileFullPath == '') {
             // request the persistent file system
@@ -130,6 +121,7 @@ var app = (function() {
     }
 
     modalViewListContainer.on('click', '#btn-exitApp', function(event) {
+        event.preventDefault();
         navigator.app.exitApp();
     });
     
