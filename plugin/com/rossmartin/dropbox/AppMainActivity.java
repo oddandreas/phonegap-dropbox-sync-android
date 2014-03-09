@@ -32,8 +32,7 @@ public class PhoneGapSync extends CordovaActivity
     static final int REQUEST_LINK_TO_DBX = 1337;  // This value is up to you, must be the same as in your plugin though
     
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         super.init();
         // Set by <content src="index.html" /> in config.xml
