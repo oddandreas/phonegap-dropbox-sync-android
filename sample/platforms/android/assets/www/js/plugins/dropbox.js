@@ -1,9 +1,10 @@
 var dropbox = (function() {
 
     var pluginName = "DropboxSync",
-        exec = cordova.require("cordova/exec"); // https://github.com/ccoenraets/phonegap-dropbox-sync/issues/2
+        exec = cordova.require("cordova/exec"),
+        me = {};
 
-    var link = function() {
+    me.link = function() {
         var deferred = $.Deferred();
         exec(
             function(result) {
@@ -18,7 +19,7 @@ var dropbox = (function() {
         return deferred.promise();
     }
 
-    var checkLink = function() {
+    me.checkLink = function() {
         var deferred = $.Deferred();
         exec(
             function(result) {
@@ -31,7 +32,7 @@ var dropbox = (function() {
         return deferred.promise();
     }
 
-    var unlink = function() {
+    me.unlink = function() {
         var deferred = $.Deferred();
         exec(
             function(result) {
@@ -44,7 +45,7 @@ var dropbox = (function() {
         return deferred.promise();
     }
 
-    var listFolder = function(dropboxPath) {
+    me.listFolder = function(dropboxPath) {
         var deferred = $.Deferred();
         exec(
             function(result) {
@@ -58,7 +59,7 @@ var dropbox = (function() {
         return deferred.promise();
     }
 
-    var addObserver = function(dropboxPath) {
+    me.addObserver = function(dropboxPath) {
         var deferred = $.Deferred();
         exec(
             function(result) {
@@ -71,7 +72,7 @@ var dropbox = (function() {
         return deferred.promise();
     }
 
-    var readData = function(dropboxFilePath) {
+    me.readData = function(dropboxFilePath) {
         var deferred = $.Deferred();
         exec(
             function(result) {
@@ -84,7 +85,7 @@ var dropbox = (function() {
         return deferred.promise();
     }
 
-    var readString = function(dropboxFilePath) {
+    me.readString = function(dropboxFilePath) {
         var deferred = $.Deferred();
         exec(
             function(result) {
@@ -97,7 +98,7 @@ var dropbox = (function() {
         return deferred.promise();
     }
     
-    var uploadFile = function(filePath, dropboxPath) {
+    me.uploadFile = function(filePath, dropboxPath) {
         var deferred = $.Deferred();
         exec(
             function(result) {
@@ -110,7 +111,7 @@ var dropbox = (function() {
         return deferred.promise();
     }
     
-    var uploadFolder = function(folderPath, dropboxPath, doRecursive) {
+    me.uploadFolder = function(folderPath, dropboxPath, doRecursive) {
         var deferred = $.Deferred();
         exec(
             function(result) {
@@ -123,7 +124,7 @@ var dropbox = (function() {
         return deferred.promise();
     }
     
-    var deleteFile = function(dropboxFilePath) {
+    me.deleteFile = function(dropboxFilePath) {
         var deferred = $.Deferred();
         exec(
             function(result) {
@@ -136,7 +137,7 @@ var dropbox = (function() {
         return deferred.promise();
     }
     
-    var createFolder = function(dropboxFilePath) {
+    me.createFolder = function(dropboxFilePath) {
         var deferred = $.Deferred();
         exec(
             function(result) {
@@ -149,7 +150,7 @@ var dropbox = (function() {
         return deferred.promise();
     }
     
-    var openFile = function(dropboxFilePath) {
+    me.openFile = function(dropboxFilePath) {
         var deferred = $.Deferred();
         exec(
             function(result) {
@@ -162,19 +163,6 @@ var dropbox = (function() {
         return deferred.promise();
     }
 
-    return {
-        link: link,
-        checkLink: checkLink,
-        unlink: unlink,
-        listFolder: listFolder,
-        addObserver: addObserver,
-        readData: readData,
-        readString: readString,
-        uploadFile: uploadFile,
-        uploadFolder: uploadFolder,
-        deleteFile: deleteFile,
-        createFolder: createFolder,
-        openFile: openFile
-    }
+    return me;
 
 })();
