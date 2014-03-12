@@ -43,12 +43,15 @@ public class DropboxPlugin extends CordovaPlugin {
     private static final String APP_KEY = "81v5tm7jg21zk8c"; // Your app key here
     private static final String APP_SECRET = "f9cwicck72tuhpx"; // Your app secret here
     static final int REQUEST_LINK_TO_DBX = 1337;  // This value is up to you, it must be the same as in your main activity though
-    private DbxAccountManager mDbxAcctMgr;
+    private DbxAccountManager mDbxAcctMgr = null; // creating instance only once
     
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         Log.v(TAG, "execute method starting");
-        mDbxAcctMgr = DbxAccountManager.getInstance(cordova.getActivity().getApplicationContext(), APP_KEY, APP_SECRET);
+        if (mDbxAcctMgr == null) {
+            Log.v(TAG, "creating mDbxAcctMgr instance"); // not sure how expensive this is below but prob best to instantiate once
+            mDbxAcctMgr = DbxAccountManager.getInstance(cordova.getActivity().getApplicationContext(), APP_KEY, APP_SECRET);
+        }
         if (action.equals("checkLink")) {
             checkLink(callbackContext);
             return true;
