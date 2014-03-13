@@ -8,7 +8,11 @@ C:\Users\Ross\Documents\GitHub\phonegap-dropbox-sync\sample\platforms\android\an
 C:\Users\Ross\Documents\GitHub\phonegap-dropbox-sync\sample\platforms\android\ant-build\classes\com\rossmartin\dropbox\DropboxPlugin$4.class \
 C:\Users\Ross\Documents\GitHub\phonegap-dropbox-sync\sample\platforms\android\ant-build\classes\com\rossmartin\dropbox\DropboxPlugin$5.class \
 C:\Users\Ross\Documents\GitHub\phonegap-dropbox-sync\sample\platforms\android\ant-build\classes\com\rossmartin\dropbox\DropboxPlugin$6.class \
+C:\Users\Ross\Documents\GitHub\phonegap-dropbox-sync\sample\platforms\android\ant-build\classes\com\rossmartin\dropbox\DropboxPlugin$7.class \
+C:\Users\Ross\Documents\GitHub\phonegap-dropbox-sync\sample\platforms\android\ant-build\classes\com\rossmartin\dropbox\DropboxPlugin$8.class \
+C:\Users\Ross\Documents\GitHub\phonegap-dropbox-sync\sample\platforms\android\ant-build\classes\com\rossmartin\dropbox\DropboxPlugin$9.class \
 C:\Users\Ross\Documents\GitHub\phonegap-dropbox-sync\sample\platforms\android\ant-build\classes\com\rossmartin\dropbox\DropboxPlugin.class \
+C:\Users\Ross\Documents\GitHub\phonegap-dropbox-sync\sample\platforms\android\ant-build\classes\com\rossmartin\dropbox\FileOpener.class \
 C:\Users\Ross\Documents\GitHub\phonegap-dropbox-sync\sample\platforms\android\ant-build\classes\com\rossmartin\dropbox\PhoneGapSync.class \
 C:\Users\Ross\Documents\GitHub\phonegap-dropbox-sync\sample\platforms\android\ant-build\classes\com\rossmartin\dropbox\R$attr.class \
 C:\Users\Ross\Documents\GitHub\phonegap-dropbox-sync\sample\platforms\android\ant-build\classes\com\rossmartin\dropbox\R$drawable.class \
