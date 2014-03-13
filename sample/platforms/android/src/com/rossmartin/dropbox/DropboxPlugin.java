@@ -43,15 +43,26 @@ public class DropboxPlugin extends CordovaPlugin {
     private static final String APP_KEY = "81v5tm7jg21zk8c"; // Your app key here
     private static final String APP_SECRET = "f9cwicck72tuhpx"; // Your app secret here
     static final int REQUEST_LINK_TO_DBX = 1337;  // This value is up to you, it must be the same as in your main activity though
-    private DbxAccountManager mDbxAcctMgr = null; // creating instance only once
+    private DbxAccountManager mDbxAcctMgr = null;
+    DbxFileSystem dbxFs = null;
     
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         Log.v(TAG, "execute method starting");
+        
         if (mDbxAcctMgr == null) {
-            Log.v(TAG, "creating mDbxAcctMgr instance"); // not sure how expensive this is below but prob best to instantiate once
-            mDbxAcctMgr = DbxAccountManager.getInstance(cordova.getActivity().getApplicationContext(), APP_KEY, APP_SECRET);
+            Log.v(TAG, "creating mDbxAcctMgr & dbxFs instance"); 
+            // not sure how expensive this is below but prob best to instantiate them once
+            try {
+                mDbxAcctMgr = DbxAccountManager.getInstance(cordova.getActivity().getApplicationContext(), APP_KEY, APP_SECRET);
+                dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
+            } catch (Exception e) {
+                e.printStackTrace();
+                callbackContext.error(e.getMessage());
+                return false;
+            }
         }
+        
         if (action.equals("checkLink")) {
             checkLink(callbackContext);
             return true;
@@ -107,6 +118,7 @@ public class DropboxPlugin extends CordovaPlugin {
             openFile(path, callbackContext);
             return true;
         }
+        
         return false;
     }
     
@@ -135,10 +147,8 @@ public class DropboxPlugin extends CordovaPlugin {
         Log.v(TAG, "listFolder method executing");
         cordova.getThreadPool().execute(new Runnable() {
             public void run() {
-                DbxFileSystem dbxFs;
                 JSONArray jsonArray = new JSONArray();
                 try {
-                    dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
                     List<DbxFileInfo> infos = dbxFs.listFolder(new DbxPath(path));
                     for (DbxFileInfo info : infos) {
                         JSONObject dbFile = new JSONObject();
@@ -162,9 +172,7 @@ public class DropboxPlugin extends CordovaPlugin {
         Log.v(TAG, "addObserver method executing");
         cordova.getThreadPool().execute(new Runnable() {
             public void run() {
-                DbxFileSystem dbxFs;
                 try {
-                    dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
                     dbxFs.addPathListener(new DbxFileSystem.PathListener() {
                         @Override
                         public void onPathChange(DbxFileSystem arg0, DbxPath arg1, Mode arg2) {
@@ -188,7 +196,7 @@ public class DropboxPlugin extends CordovaPlugin {
                             }
                         }
                     });
-                } catch (Unauthorized e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                     callbackContext.error(e.getMessage());
                 }
@@ -200,10 +208,8 @@ public class DropboxPlugin extends CordovaPlugin {
         Log.v(TAG, "readData method executing");
         cordova.getThreadPool().execute(new Runnable() {
             public void run() {
-                DbxFileSystem dbxFs;
                 
                 try {
-                    dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
                     DbxPath filePath = new DbxPath(path);
                     DbxFile file = dbxFs.open(filePath);
                     try {
@@ -240,10 +246,8 @@ public class DropboxPlugin extends CordovaPlugin {
         Log.v(TAG, "readString method executing");
         cordova.getThreadPool().execute(new Runnable() {
             public void run() {
-                DbxFileSystem dbxFs;
                 
                 try {
-                    dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
                     DbxPath filePath = new DbxPath(path);
                     DbxFile file = dbxFs.open(filePath);
                     try {
@@ -267,10 +271,8 @@ public class DropboxPlugin extends CordovaPlugin {
         Log.v(TAG, "uploadFile method executing");
         cordova.getThreadPool().execute(new Runnable() {
             public void run() {
-                DbxFileSystem dbxFs;
                 
                 try {
-                    dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
                     File uploadFile = resolveLocalFileSystemURI(localPath);
                     Log.v(TAG, "dropboxPath + uploadFile.getName() -> " + dropboxPath + uploadFile.getName());
                     DbxPath filePath = new DbxPath(dropboxPath + uploadFile.getName());
@@ -296,11 +298,9 @@ public class DropboxPlugin extends CordovaPlugin {
         Log.v(TAG, "uploadFolder method executing");
         cordova.getThreadPool().execute(new Runnable() {
             public void run() {
-                DbxFileSystem dbxFs;
                 List<File> localFileList = new ArrayList<File>();
                 
                 try {
-                    dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
                     File uploadPath = resolveLocalFileSystemURI(localPath);
                     directorySearch(uploadPath, localFileList, doRecursive);
                     Log.v(TAG, "uploadFolder after directorySearch method call, localFileList -> " + localFileList + " \r\n\r\nRecursion: " + doRecursive);
@@ -352,7 +352,6 @@ public class DropboxPlugin extends CordovaPlugin {
         cordova.getThreadPool().execute(new Runnable() {
             public void run() {
                 try {
-                    DbxFileSystem dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
                     DbxPath dbxPath = new DbxPath(dropboxPath);
                     
                     dbxFs.delete(dbxPath);
@@ -371,7 +370,6 @@ public class DropboxPlugin extends CordovaPlugin {
         cordova.getThreadPool().execute(new Runnable() {
             public void run() {
                 try {
-                    DbxFileSystem dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
                     DbxPath dbxPath = new DbxPath(dropboxPath);
                     
                     dbxFs.createFolder(dbxPath);
@@ -390,7 +388,6 @@ public class DropboxPlugin extends CordovaPlugin {
         cordova.getThreadPool().execute(new Runnable() {
             public void run() {
                 try {
-                    DbxFileSystem dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
                     DbxPath filePath = new DbxPath(path);
                     DbxFile file = dbxFs.open(filePath);
                     
