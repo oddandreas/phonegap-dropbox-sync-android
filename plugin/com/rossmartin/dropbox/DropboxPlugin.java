@@ -44,7 +44,7 @@ public class DropboxPlugin extends CordovaPlugin {
     private static final String APP_SECRET = "f9cwicck72tuhpx"; // Your app secret here
     static final int REQUEST_LINK_TO_DBX = 1337;  // This value is up to you, it must be the same as in your main activity though
     private DbxAccountManager mDbxAcctMgr = null;
-    private DbxFileSystem dbxFs = null;
+    DbxFileSystem dbxFs = null;
     
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
