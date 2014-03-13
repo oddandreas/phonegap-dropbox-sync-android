@@ -6,9 +6,4 @@ C:\Users\Ross\Documents\GitHub\phonegap-dropbox-sync\sample\platforms\android\re
 C:\Users\Ross\Documents\GitHub\phonegap-dropbox-sync\sample\platforms\android\res\drawable-xhdpi\icon.png \
 C:\Users\Ross\Documents\GitHub\phonegap-dropbox-sync\sample\platforms\android\res\values\strings.xml \
 C:\Users\Ross\Documents\GitHub\phonegap-dropbox-sync\sample\platforms\android\res\xml\config.xml \
-C:\Users\Ross\Documents\GitHub\phonegap-dropbox-sync\sample\platforms\android\ant-build\res\drawable\icon.png \
-C:\Users\Ross\Documents\GitHub\phonegap-dropbox-sync\sample\platforms\android\ant-build\res\drawable-hdpi\icon.png \
-C:\Users\Ross\Documents\GitHub\phonegap-dropbox-sync\sample\platforms\android\ant-build\res\drawable-ldpi\icon.png \
-C:\Users\Ross\Documents\GitHub\phonegap-dropbox-sync\sample\platforms\android\ant-build\res\drawable-mdpi\icon.png \
-C:\Users\Ross\Documents\GitHub\phonegap-dropbox-sync\sample\platforms\android\ant-build\res\drawable-xhdpi\icon.png \
 C:\Users\Ross\Documents\GitHub\phonegap-dropbox-sync\sample\platforms\android\ant-build\AndroidManifest.xml \

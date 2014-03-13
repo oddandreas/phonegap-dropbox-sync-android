@@ -16,11 +16,8 @@
     <feature name="File">
         <param name="android-package" value="org.apache.cordova.file.FileUtils" />
     </feature>
-    <feature name="DropboxSync">
+    <feature name="com.rossmartin.dropbox">
         <param name="android-package" value="com.rossmartin.dropbox.DropboxPlugin" />
-    </feature>
-    <feature name="FileOpener">
-        <param name="android-package" value="com.rossmartin.dropbox.FileOpener" />
     </feature>
     <feature name="Notification">
         <param name="android-package" value="org.apache.cordova.dialogs.Notification" />
