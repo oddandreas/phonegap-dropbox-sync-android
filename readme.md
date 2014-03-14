@@ -83,7 +83,7 @@ Get the Base64 decoded string from an image in Dropbox
 ```
 var filePath = "foobar.jpg";
 
-dropbox.readData(filePath).done(function(result) {
+dropbox.getImageBase64String(filePath).done(function(result) {
     $('#image').attr('src', "data:image/jpeg;base64," + result);
     // result is the Base64-encoded string.
 });
