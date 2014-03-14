@@ -78,17 +78,14 @@ dropbox.readString(filePath).done(function(result) {
 });
 ```
 
-Get the Base64 decoded data from an image in Dropbox
+Get the Base64 decoded string from an image in Dropbox
 (use an image from Dropbox in your app):
 ```
 var filePath = "foobar.jpg";
 
 dropbox.readData(filePath).done(function(result) {
-    var bytes = new Uint8Array(result);
-    $('#image').attr('src', "data:image/jpeg;base64," + encode(bytes));
-    // A JS library is being used to encode the base64 decoded byte array.
-    // New decoding technique soon will be done in the plugin, 
-    // this will remove the library dependency and be much faster.
+    $('#image').attr('src', "data:image/jpeg;base64," + result);
+    // result is the Base64-encoded string.
 });
 ```
 
