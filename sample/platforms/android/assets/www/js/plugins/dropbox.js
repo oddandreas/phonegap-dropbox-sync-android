@@ -52,7 +52,6 @@ var dropbox = (function() {
                 deferred.resolve(result);
             },
             function(error) {
-                console.log("getFiles error");
                 deferred.reject(error);
             },
             pluginName, "listFolder", [dropboxPath]);
@@ -72,7 +71,7 @@ var dropbox = (function() {
         return deferred.promise();
     }
 
-    me.readData = function(dropboxFilePath) {
+    me.getImageBase64String = function(dropboxFilePath) {
         var deferred = $.Deferred();
         exec(
             function(result) {
@@ -81,7 +80,7 @@ var dropbox = (function() {
             function(error) {
                 deferred.reject();
             },
-            pluginName, "readData", [dropboxFilePath]);
+            pluginName, "getImageBase64String", [dropboxFilePath]);
         return deferred.promise();
     }
 

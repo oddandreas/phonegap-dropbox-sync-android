@@ -14,22 +14,6 @@ var DropboxView = function (template, listTemplate) {
             if (me.isTapHolding) return;
             var filePath = decodeURIComponent($(event.currentTarget).attr('href').substr(1));
             app.showLoader();
-            // decided to open files externally rather than inside app, readData & readString are still in plugin though
-            /*$('#filePath').html(filePath);
-            if ( (/\.(gif|jpg|jpeg|tiff|png)$/i).test(filePath) ) {
-                $('#text, #image').hide();
-                dropbox.readData(filePath).done(function(result) {
-                    var bytes = new Uint8Array(result);
-                    $('#image').attr('src', "data:image/jpeg;base64," + encode(bytes)).show();
-                    app.hideLoader();
-                });
-            } else {
-                $('#image, #text').hide();
-                dropbox.readString(filePath).done(function(result) {
-                    $('#text').html(result).show();
-                    app.hideLoader();
-                });
-            }*/
             dropbox.openFile(filePath).done(function() {
                 app.hideLoader();
             }).fail(function() {
@@ -38,7 +22,7 @@ var DropboxView = function (template, listTemplate) {
             });
             event.preventDefault();
         });
-        
+                
         this.el.on('taphold', '#fileList li a', function(event) {
             me.isTapHolding = true;
             var fileName = $(event.target).text().trim(),
