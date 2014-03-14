@@ -15,7 +15,7 @@ dropbox.link();
 List the Dropbox App's root folder:
 ```
 dropbox.listFolder("/").done(function(files) {
-    // each object in files have properties: path, modifiedTime, size, and isFolder
+    // each object in files have properties: path, modifiedTime, size, and isFolder.
 });
 ```
 
@@ -25,7 +25,7 @@ var localFileUri = "file:///storage/sdcard0/DCIM/Camera/SomeVideo.mp4";
 var dropboxFolderPath = "/someFolder";
 
 dropbox.uploadFile(localFileUri, dropboxFolderPath).done(function() {
-    // dropboxFolderPath is the Dropbox folder you want to upload the file into
+    // dropboxFolderPath is the Dropbox folder you want to upload the file into.
 });
 ```
 
@@ -36,8 +36,8 @@ var dropboxFolderPath = "/someFolder";
 var doRecursive = true;
 
 dropbox.uploadFolder(localFileUri, dropboxFolderPath, doRecursive).done(function() {
-    // dropboxFolderPath is the Dropbox folder you want to upload the files/folders into
-    // the folder upload can be done recursively by passing true in the 3rd parameter
+    // dropboxFolderPath is the Dropbox folder you want to upload the files/folders into.
+    // The folder upload can be done recursively by passing true in the 3rd parameter.
 });
 ```
 
@@ -47,7 +47,7 @@ var filePath = "/foo/bar.jpg";
 
 dropbox.openFile(filePath).done(function() {
     // Android device will either open the file with the proper external application
-    // installed on your device or ask you which application to use
+    // installed on your device or ask you which application to use.
 });
 ```
 
@@ -66,6 +66,29 @@ var filePath = "/foo/bar.json";
 
 dropbox.deleteFile(filePath).done(function() {
     // Deletes a file, or recursively deletes a folder.
+});
+```
+
+Read a file in Dropbox:
+```
+var filePath = "/foo/bar.json";
+
+dropbox.readString(filePath).done(function(result) {
+    // Reads the contents of a file (result is a string).
+});
+```
+
+Get the Base64 decoded data from an image in Dropbox
+(use an image from Dropbox in your app):
+```
+var filePath = "foobar.jpg";
+
+dropbox.readData(filePath).done(function(result) {
+    var bytes = new Uint8Array(result);
+    $('#image').attr('src', "data:image/jpeg;base64," + encode(bytes));
+    // A JS library is being used to encode the base64 decoded byte array.
+    // New decoding technique soon will be done in the plugin, 
+    // this will remove the library dependency and be much faster.
 });
 ```
 
