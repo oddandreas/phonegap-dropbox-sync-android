@@ -91,6 +91,14 @@ dropbox.getImageBase64String(filePath).done(function(result) {
 });
 ```
 
+Unlink from Dropbox:
+
+```
+dropbox.unlink().done(function() {
+    // do something here after deferred resolved
+});
+```
+
 __Note: This plugin requires jQuery 1.5+ for the Deferred Object.__
 
 Updates
