@@ -12,9 +12,11 @@ Link to Dropbox:
 dropbox.link();
 ```
 
-List the Dropbox App's root folder:
+List a Dropbox folder:
 ```
-dropbox.listFolder("/").done(function(files) {
+var dropboxFolderPath = "/"; // root app dir in this case
+
+dropbox.listFolder(dropboxFolderPath).done(function(files) {
     // each object in files have properties: path, modifiedTime, size, and isFolder.
 });
 ```
