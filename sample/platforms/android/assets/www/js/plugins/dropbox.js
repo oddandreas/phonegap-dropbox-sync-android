@@ -97,8 +97,16 @@ var dropbox = (function() {
         return deferred.promise();
     }
     
-    me.uploadFile = function(filePath, dropboxPath) {
-        var deferred = $.Deferred();
+    me.uploadFile = function(options) {
+        var deferred = $.Deferred(),
+            defaults = {
+                dropboxPath: '/',
+            }, 
+            options = $.extend({}, defaults, options);
+            if (! options.filePath) {
+                alert('Specify local file path for upload.');
+                return deferred.reject();
+            }
         exec(
             function(result) {
                 deferred.resolve(result);
@@ -106,7 +114,9 @@ var dropbox = (function() {
             function(error) {
                 deferred.reject();
             },
-            pluginName, "uploadFile", [filePath, dropboxPath]);
+            pluginName, "uploadFile", 
+            [options.filePath, options.dropboxPath]
+        );
         return deferred.promise();
     }
     

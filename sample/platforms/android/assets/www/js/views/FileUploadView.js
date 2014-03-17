@@ -37,7 +37,10 @@ function FileUploadView(template, listTemplate) {
                 app.hideModal();
                 switch(el.id) {
                     case 'btn-uploadFile':
-                        dropbox.uploadFile(fullPath, app.dropboxPath).done(function(result) {
+                        dropbox.uploadFile({
+                            filePath: fullPath, 
+                            dropboxPath: app.dropboxPath
+                        }).done(function(result) {
                             // nothing to do, add here if needed
                         }).fail(function (err) {
                             console.log('dropbox.uploadFile fail, err -> ' + err);
