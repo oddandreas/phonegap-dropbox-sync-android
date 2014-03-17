@@ -1,4 +1,4 @@
-var FileUploadView = function (template, listTemplate) {
+function FileUploadView(template, listTemplate) {
 
     var me = this;
     
@@ -44,14 +44,21 @@ var FileUploadView = function (template, listTemplate) {
                         });
                         break;
                     case 'btn-uploadFolderRecursive':
-                        dropbox.uploadFolder(fullPath, app.dropboxPath, true).done(function(result) {
+                        dropbox.uploadFolder({
+                            folderPath: fullPath, 
+                            dropboxPath: app.dropboxPath, 
+                            doRecursive: true
+                        }).done(function(result) {
                             // nothing to do, add here if needed
                         }).fail(function (err) {
                             console.log('dropbox.uploadFolder fail');
                         });
                         break;
                     case 'btn-uploadFolder':
-                        dropbox.uploadFolder(fullPath, app.dropboxPath, false).done(function(result) {
+                        dropbox.uploadFolder({
+                            folderPath: fullPath, 
+                            dropboxPath: app.dropboxPath
+                        }).done(function(result) {
                             // nothing to do, add here if needed
                         }).fail(function (err) {
                             console.log('dropbox.uploadFolder fail');

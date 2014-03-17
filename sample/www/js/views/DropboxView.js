@@ -1,4 +1,4 @@
-var DropboxView = function (template, listTemplate) {
+function DropboxView(template, listTemplate) {
 
     var me = this;
     
@@ -80,6 +80,13 @@ var DropboxView = function (template, listTemplate) {
                         });
                     }
                 }, 'New Folder', ['Ok', 'Cancel'], '');
+            });
+            event.preventDefault();
+        });
+        
+        $('#effeckt-off-screen-nav').on('click', '#btn-refresh', function(event) {
+            app.toggleNav().done(function() {
+                me.listFolder();
             });
             event.preventDefault();
         });
@@ -189,6 +196,10 @@ DropboxView.prototype.createNavMenu = function() {
                         {
                             text: 'New Folder Here',
                             id: 'btn-newFolder'
+                        },
+                        {
+                            text: 'Refresh',
+                            id: 'btn-refresh'
                         },
                         {
                             text: 'Unlink',

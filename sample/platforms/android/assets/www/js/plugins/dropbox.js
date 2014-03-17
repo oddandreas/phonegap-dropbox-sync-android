@@ -110,8 +110,17 @@ var dropbox = (function() {
         return deferred.promise();
     }
     
-    me.uploadFolder = function(folderPath, dropboxPath, doRecursive) {
-        var deferred = $.Deferred();
+    me.uploadFolder = function(options) {
+        var deferred = $.Deferred(),
+            defaults = {
+                dropboxPath: '/',
+                doRecursive: false
+            }, 
+            options = $.extend({}, defaults, options);
+            if (! options.folderPath) {
+                alert('Specify local folder path for upload.');
+                return deferred.reject();
+            }
         exec(
             function(result) {
                 deferred.resolve(result);
@@ -119,7 +128,9 @@ var dropbox = (function() {
             function(error) {
                 deferred.reject();
             },
-            pluginName, "uploadFolder", [folderPath, dropboxPath, doRecursive]);
+            pluginName, "uploadFolder", 
+            [options.folderPath, options.dropboxPath, options.doRecursive]
+        );
         return deferred.promise();
     }
     

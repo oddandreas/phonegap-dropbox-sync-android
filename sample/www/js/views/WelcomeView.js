@@ -1,4 +1,4 @@
-var WelcomeView = function (template) {
+function WelcomeView(template) {
 
     this.initialize = function () {
 
