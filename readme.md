@@ -35,7 +35,7 @@ Upload a folder to Dropbox:
 ```
 dropbox.uploadFolder({
     folderPath: "file:///storage/sdcard0", // required
-    dropboxPath: "/someFolder", // required
+    dropboxPath: "/someFolder", // optional, defaults to root ('/')
     doRecursive: true // optional, defaults to false
 }).done(function() {
     // dropboxFolderPath is the Dropbox folder you want to upload the files/folders into.
