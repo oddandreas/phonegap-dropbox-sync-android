@@ -23,11 +23,11 @@ dropbox.listFolder(dropboxFolderPath).done(function(files) {
 
 Upload a file to Dropbox:
 ```
-var localFileUri = "file:///storage/sdcard0/DCIM/Camera/SomeVideo.mp4";
-var dropboxFolderPath = "/someFolder";
-
-dropbox.uploadFile(localFileUri, dropboxFolderPath).done(function() {
-    // dropboxFolderPath is the Dropbox folder you want to upload the file into.
+dropbox.uploadFile({
+    filePath: "file:///storage/sdcard0/DCIM/Camera/SomeVideo.mp4", // required, local URI
+    dropboxPath: "/someFolder" // optional, defaults to root ('/')
+}).done(function() {
+    // dropboxPath is the Dropbox folder you want to upload the file into.
 });
 ```
 
