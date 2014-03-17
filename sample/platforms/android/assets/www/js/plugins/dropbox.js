@@ -103,10 +103,10 @@ var dropbox = (function() {
                 dropboxPath: '/'
             }, 
             options = $.extend({}, defaults, options);
-            if (! options.filePath) {
-                alert('Specify local file path for upload.');
-                return deferred.reject();
-            }
+        if (! options.filePath) {
+            alert('Specify local file path for upload.');
+            return deferred.reject();
+        }
         exec(
             function(result) {
                 deferred.resolve(result);
@@ -127,10 +127,10 @@ var dropbox = (function() {
                 doRecursive: false
             }, 
             options = $.extend({}, defaults, options);
-            if (! options.folderPath) {
-                alert('Specify local folder path for upload.');
-                return deferred.reject();
-            }
+        if (! options.folderPath) {
+            alert('Specify local folder path for upload.');
+            return deferred.reject();
+        }
         exec(
             function(result) {
                 deferred.resolve(result);
