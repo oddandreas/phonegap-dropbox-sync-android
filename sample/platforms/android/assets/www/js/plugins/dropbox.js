@@ -100,7 +100,7 @@ var dropbox = (function() {
     me.uploadFile = function(options) {
         var deferred = $.Deferred(),
             defaults = {
-                dropboxPath: '/',
+                dropboxPath: '/'
             }, 
             options = $.extend({}, defaults, options);
             if (! options.filePath) {
