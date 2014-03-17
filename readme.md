@@ -33,13 +33,13 @@ dropbox.uploadFile(localFileUri, dropboxFolderPath).done(function() {
 
 Upload a folder to Dropbox:
 ```
-var localFileUri = "file:///storage/sdcard0";
-var dropboxFolderPath = "/someFolder";
-var doRecursive = true;
-
-dropbox.uploadFolder(localFileUri, dropboxFolderPath, doRecursive).done(function() {
+dropbox.uploadFolder({
+    folderPath: "file:///storage/sdcard0", // required
+    dropboxPath: "/someFolder", // required
+    doRecursive: true // optional, defaults to false
+}).done(function() {
     // dropboxFolderPath is the Dropbox folder you want to upload the files/folders into.
-    // The folder upload can be done recursively by passing true in the 3rd parameter.
+    // The folder upload can be done recursively by setting doRecursive to true.
 });
 ```
 
