@@ -11,7 +11,7 @@ function DropboxView(template, listTemplate) {
         this.el = $('<div/>');
 
         this.el.on('click', '#fileList li a.file', function(event) {
-            if (me.isTapHolding) return;
+            if (me.isTapHolding) return false;
             var filePath = decodeURIComponent($(event.currentTarget).attr('href').substr(1));
             app.showLoader();
             dropbox.openFile(filePath).done(function() {
@@ -72,7 +72,7 @@ function DropboxView(template, listTemplate) {
                     if (results.buttonIndex == 1) {
                         var folderName = results.input1.trim(),
                             dropboxFilePath = (app.dropboxPath == '/') ? '/' + folderName : app.dropboxPath + '/' + folderName;
-                        if (dropboxFilePath == '/') return; // user tapped OK but didn't type a folder name
+                        if (dropboxFilePath == '/') return false; // user tapped OK but didn't type a folder name
                         dropbox.createFolder(dropboxFilePath).done(function(result) {
                             me.listFolder();
                         }).fail(function() {

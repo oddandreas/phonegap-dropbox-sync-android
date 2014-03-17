@@ -177,7 +177,7 @@ var app = (function() {
         
         document.addEventListener("menubutton", onMenuKeyDown, false);
         function onMenuKeyDown(event) {
-            if (modalIsVisible()) return;
+            if (modalIsVisible()) return false;
             toggleNav();
             event.preventDefault();
         }

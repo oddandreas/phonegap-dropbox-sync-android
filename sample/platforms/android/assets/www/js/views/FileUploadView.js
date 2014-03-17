@@ -13,7 +13,7 @@ function FileUploadView(template, listTemplate) {
         this.el.on('click', '#localFileList li a.file', function(event) {
             if (me.isTapHolding) {
                 event.preventDefault();
-                return;
+                return false;
             }
             window.plugins.fileOpener.open($(this).attr('fullPath'));
         });
@@ -21,7 +21,7 @@ function FileUploadView(template, listTemplate) {
         this.el.on('click', '#localFileList li a.folder', function(event) {
             if (me.isTapHolding) {
                 event.preventDefault();
-                return;
+                return false;
             }
             app.localFileFullPath = $(this).attr('fullPath');
             me.getFolderWithPath();
