@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.util.Base64;
 import android.util.Log;
 
 import java.io.BufferedInputStream;
@@ -66,9 +67,9 @@ public class DropboxPlugin extends CordovaPlugin {
             String path = args.getString(0);
             addObserver(path, callbackContext);
             return true;
-        } else if (action.equals("readData")) {
+        } else if (action.equals("getImageBase64String")) {
             String path = args.getString(0);
-            readData(path, callbackContext);
+            getImageBase64String(path, callbackContext);
             return true;
         } else if (action.equals("readString")) {
             String path = args.getString(0);
@@ -193,12 +194,11 @@ public class DropboxPlugin extends CordovaPlugin {
         });
     }
     
-    private void readData(final String path, final CallbackContext callbackContext) {
-        Log.v(TAG, "readData method executing");
+    private void getImageBase64String(final String path, final CallbackContext callbackContext) {
+        Log.v(TAG, "getImageBase64String method executing");
         cordova.getThreadPool().execute(new Runnable() {
             public void run() {
                 DbxFileSystem dbxFs;
-                
                 try {
                     dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
                     DbxPath filePath = new DbxPath(path);
@@ -213,7 +213,8 @@ public class DropboxPlugin extends CordovaPlugin {
                            char c = (char)buf.read();
                            baos.write(c);
                         }
-                        callbackContext.success(baos.toByteArray());
+                        String encodedImage = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
+                        callbackContext.success(encodedImage);
                         baos.flush();
                         buf.close();
                     } catch (IOException e) {
@@ -222,15 +223,12 @@ public class DropboxPlugin extends CordovaPlugin {
                     } finally {
                         file.close();
                     }
-                    
                 } catch (Exception e) {
                     e.printStackTrace();
                     callbackContext.error(e.getMessage());
                 }
             }
         });
-        
-        
     }
     
     private void readString(final String path, final CallbackContext callbackContext) {
